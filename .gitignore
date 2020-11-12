@@ -4,4 +4,6 @@
 ## but
 !.gitignore
 !init.el
-!local/
+!local
+!local/flycheck-cpplint
+!local/flycheck-cpplint/*
