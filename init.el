@@ -212,11 +212,24 @@
   ;; https://stackoverflow.com/questions/3312114/how-to-tell-emacs-to-open-h-file-in-c-mode
   (add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode)))
 
-(use-package semantic
+;; (use-package semantic
+;;   :config
+;;   (global-semanticdb-minor-mode 1)
+;;   (global-semantic-idle-scheduler-mode 1)
+;;   (semantic-mode 1))
+
+;; irony
+(use-package irony
   :config
-  (global-semanticdb-minor-mode 1)
-  (global-semantic-idle-scheduler-mode 1)
-  (semantic-mode 1))
+  (add-hook 'c++-mode-hook 'irony-mode)
+  (add-hook 'c-mode-hook 'irony-mode)
+
+  (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options))
+
+(use-package company-irony
+  :config
+  (eval-after-load 'company
+    '(add-to-list 'company-backends 'company-irony)))
 
 (use-package google-c-style
   :config
