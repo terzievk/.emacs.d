@@ -10,9 +10,9 @@
   "A C/C++ syntax checker using cpplint.
 
 See URL `https://github.com/cpplint/cpplint'."
-  ;; source-inplace instead of source because cpplint gets confused
+  ;; source-original instead of source because cpplint gets confused
   ;; by the flycheck temp files and prints wrong header guard messages
-  :command ("cpplint" source-inplace)
+  :command ("cpplint" source-original)
   :error-patterns
   ((error line-start (file-name) ":" line ":" (message) line-end))
   :modes (c-mode c++-mode)
