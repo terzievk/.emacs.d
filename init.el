@@ -69,7 +69,7 @@
 (set-keyboard-coding-system 'utf-8)
 
 ;; highlight the other parenthesis of the pair
-(show-paren-mode 1)
+(show-paren-mode t)
 (setq show-paren-delay 0)
 
 ;; copy shell path
@@ -166,7 +166,7 @@
   ;; ('tng' means 'tab and go')
   (company-tng-mode)
 
-  ;;  (setq-local completion-ignore-case t)
+  (setq-local completion-ignore-case t)
 
   ;; paths are added in custom
   (add-to-list 'company-backends 'company-c-headers))
@@ -231,15 +231,29 @@
 (use-package flycheck-cpplint
   :ensure nil
   :load-path "local/flycheck-cpplint")
+
+;; yasnippet: A template system for Emacs
+(use-package yasnippet
+  :config
+  (yas-global-mode 1)
+  ;; Remove Yasnippet's default tab key binding
+  (define-key yas-minor-mode-map (kbd "<tab>") nil)
+  (define-key yas-minor-mode-map (kbd "TAB") nil)
+  ;; Set Yasnippet's key binding to shift+tab
+  (define-key yas-minor-mode-map (kbd "<backtab>") 'yas-expand)
+  )
+
+
+(use-package yasnippet-snippets)
 ;; ranger:
 (use-package ranger
   :config
   (ranger-override-dired-mode t))
 
 ;; ;; autopair: Automagically pair braces and quotes in emacs like TextMate
-;; (use-package autopair
-;;   :config
-;;   (autopair-global-mode))
+(use-package autopair
+  :config
+  (autopair-global-mode))
 
 
 ;; highlight-parentheses: highlight surrounding parentheses
@@ -252,40 +266,12 @@
       (highlight-parentheses-mode t)))
   (global-highlight-parentheses-mode t))
 
-(use-package smartparens
-  :config
-  (add-hook 'prog-mode-hook 'smartparens-mode))
-
 
 ;; faster recompile
 (global-set-key [f5] 'recompile)
 
 ;; save all buffers for me before compilation
 (setq compilation-ask-about-save nil)
-
-;; bbatsov
-;;
-;; smart tab behavior - indent or complete
-(setq tab-always-indent 'complete)
-
-;; hippie expand is dabbrev expand on steroids
-(setq hippie-expand-try-functions-list '(try-expand-dabbrev
-                                         try-expand-dabbrev-all-buffers
-                                         try-expand-dabbrev-from-kill
-                                         try-complete-file-name-partially
-                                         try-complete-file-name
-                                         try-expand-all-abbrevs
-                                         try-expand-list
-                                         try-expand-line
-                                         try-complete-lisp-symbol-partially
-                                         try-complete-lisp-symbol))
-
-;; use hippie-expand instead of dabbrev
-(global-set-key (kbd "M-/") #'hippie-expand)
-(global-set-key (kbd "s-/") #'hippie-expand)
-;;;;; end of batsov
-
-;;; Make compilation easier:
 
 (add-hook 'compilation-finish-functions #'my-compile)
 (defun my-compile (buf str)
@@ -296,17 +282,20 @@ See 'compilation-finish-functions to for the arguments:  BUF STR."
         (shell)
         (message "No Compilation Errors!"))))
 
-;; format the file before
+
+;; format the file before saving
 (add-hook 'before-save-hook #'indent-buffer)
+
 ;; https://stackoverflow.com/questions/4090793/emacs-reindenting-entire-c-buffer
 (defun indent-buffer ()
   "Indent the entire buffer using the default indenting scheme."
   (interactive)
-  (save-excursion
-    (delete-trailing-whitespace)
-    (indent-region (point-min) (point-max) nil)
-    (untabify (point-min) (point-max))))
+  ;; when in the listed modes do your thing
+  (when (derived-mode-p 'cc-mode 'c++-mode 'emacs-lisp-mode)
+    (save-excursion
+      (delete-trailing-whitespace)
+      (indent-region (point-min) (point-max) nil)
+      (untabify (point-min) (point-max)))))
 
 
-(provide 'init)
 ;;; init.el ends here
