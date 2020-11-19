@@ -1,6 +1,12 @@
 ;;; init.el --- my init file
 ;;; Commentary:
 ;;; Frankenstein 2.0
+;;;  This is the second version of my old config, adapted to use-package
+;;; and  mixed in with things I liked mainly from the following:
+;;;   https://github.com/bbatsov/emacs.d
+;;;   https://github.com/triffon/emacs-config
+;;;   https://tuhdo.github.io/index.html
+;;;   https://github.com/jamiecollinson/dotfiles/blob/master/config.org/
 ;;; Code:
 
 ;; start package.el with Emacs
@@ -166,10 +172,7 @@
   ;; ('tng' means 'tab and go')
   (company-tng-mode)
 
-  (setq-local completion-ignore-case t)
-
-  ;; paths are added in custom
-  (add-to-list 'company-backends 'company-c-headers))
+  (setq-local completion-ignore-case t))
 
 
 ;; company-c-headers: Auto-completion for C/C++ headers using Company
@@ -309,6 +312,32 @@ See 'compilation-finish-functions to for the arguments:  BUF STR."
       (delete-trailing-whitespace)
       (indent-region (point-min) (point-max) nil)
       (untabify (point-min) (point-max)))))
+
+;; go
+(use-package lsp-mode)
+
+(use-package go-mode
+  :config
+  (add-hook 'go-mode-hook 'lsp-deferred)
+  (add-hook 'go-mode-hook 'my-go-mode-hook)
+  (defun my-go-mode-hook ()
+    "Some dodgy stuff inspired by http://tleyden.github.io/blog/2014/12/02/getting-started-with-go-and-protocol-buffers/"
+    ;; Customize compile command to run go build
+    (if (not (string-match "go" compile-command))
+        (set (make-local-variable 'compile-command)
+             ;; most executables are called f for ease of use
+             "go generate && go build -v -o f && go test -v && go vet"))
+    ;; Godef jump key binding
+    (global-set-key (kbd "M-.") 'godef-jump)
+    (global-set-key (kbd "M-*") 'pop-tag-mark)
+    )
+
+  ;; Set up before-save hooks to format buffer and add/delete imports.
+  ;; Make sure you don't have other gofmt/goimports hooks enabled.
+  (defun lsp-go-install-save-hooks ()
+    (add-hook 'before-save-hook #'lsp-format-buffer t t)
+    (add-hook 'before-save-hook #'lsp-organize-imports t t))
+  (add-hook 'go-mode-hook #'lsp-go-install-save-hooks))
 
 
 ;;; init.el ends here
