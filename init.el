@@ -145,7 +145,7 @@
 
 ;; evil-magit: evil keys for magit
 (use-package evil-magit
-  :after magit)
+  :after (evil magit))
 
 ;; zenburn-theme: The Zenburn colour theme ported to Emacs
 (use-package zenburn-theme
@@ -285,6 +285,13 @@
 
 ;; faster recompile
 (global-set-key [f5] 'recompile)
+
+;; default compile command
+(add-hook 'c++-mode-hook
+          (lambda ()
+            (setq compile-command
+                  (concat "g++ -Wall -Werror -std=c++20 " buffer-file-name " -o f"))))
+
 
 ;; save all buffers for me before compilation
 (setq compilation-ask-about-save nil)
