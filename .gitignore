@@ -4,5 +4,3 @@
 ## but
 !.gitignore
 !init.el
-!local/
-!local/**
