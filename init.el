@@ -249,6 +249,7 @@
 
 See URL `https://github.com/cpplint/cpplint'."
     ;; ignore header guard warnings since flycheck uses temp files
+    ;; source-original is useless - needs a save after each edit to update flycheck
     :command ("cpplint" "--filter=-build/header_guard" source)
     :error-patterns
     ((error line-start (file-name) ":" line ":" (message) line-end))
@@ -296,6 +297,7 @@ See URL `https://github.com/cpplint/cpplint'."
 (add-hook 'c++-mode-hook
           (lambda ()
             (setq compile-command
+                  ;; name execs f for ease of use
                   (concat "g++ -Wall -Werror -std=c++20 " buffer-file-name " -o f"))))
 
 
