@@ -38,6 +38,9 @@
 (scroll-bar-mode -1)
 (tool-bar-mode -1)
 
+;; stop cursor from blinking because it's annoying when switching windows
+(blink-cursor-mode -1)
+
 ;; mode line settings
 (line-number-mode t)
 (column-number-mode t)
