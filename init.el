@@ -296,9 +296,13 @@ See URL `https://github.com/cpplint/cpplint'."
 ;; default compile command
 (add-hook 'c++-mode-hook
           (lambda ()
-            (setq compile-command
-                  ;; name execs f for ease of use
-                  (concat "g++ -Wall -Werror -std=c++20 " buffer-file-name " -o f"))))
+            (unless (or (file-exists-p "makefile")
+                        (file-exists-p "Makefile"))
+              (set (make-local-variable 'compile-command)
+                   ;; name execs f for ease of use
+                   (concat "g++ -Wall -Werror -std=c++20 "
+                           buffer-file-name
+                           " -o f")))))
 
 
 ;; save all buffers for me before compilation
@@ -310,6 +314,7 @@ See URL `https://github.com/cpplint/cpplint'."
 See 'compilation-finish-functions to for the arguments:  BUF STR."
   (if (null (string-match ".*exited abnormally.*" str))
       (progn
+                                        ;        (kill-buffer (process-buffer (get-process "shell")))
         (shell)
         (message "No Compilation Errors!"))))
 
@@ -354,5 +359,10 @@ See 'compilation-finish-functions to for the arguments:  BUF STR."
     (add-hook 'before-save-hook #'lsp-organize-imports t t))
   (add-hook 'go-mode-hook #'lsp-go-install-save-hooks))
 
+;; dumb-jump
+(use-package dumb-jump
+  :config
+  (add-hook 'xref-backend-functions #'dumb-jump-xref-activate))
 
+(use-package markdown-preview-eww)
 ;;; init.el ends here
