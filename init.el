@@ -146,10 +146,6 @@
   :config
   (setq magit-view-git-manual-method 'man))
 
-;; evil-magit: evil keys for magit
-(use-package evil-magit
-  :after (evil magit))
-
 ;; zenburn-theme: The Zenburn colour theme ported to Emacs
 (use-package zenburn-theme
   :ensure t
@@ -253,7 +249,7 @@
 See URL `https://github.com/cpplint/cpplint'."
     ;; ignore header guard warnings since flycheck uses temp files
     ;; source-original is useless - needs a save after each edit to update flycheck
-    :command ("cpplint" "--filter=-build/header_guard" source)
+    :command ("cpplint" "--filter=-build/header_guard,-build/include_subdir" source)
     :error-patterns
     ((error line-start (file-name) ":" line ":" (message) line-end))
     :modes (c-mode c++-mode)))
