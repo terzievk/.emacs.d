@@ -7,8 +7,8 @@
 ;;;   https://github.com/triffon/emacs-config
 ;;;   https://tuhdo.github.io/index.html
 ;;;   https://github.com/jamiecollinson/dotfiles/blob/master/config.org/
-;;; Code:
 
+;;; Code:
 ;; start package.el with Emacs
 (require 'package)
 
@@ -167,6 +167,7 @@
   (setq company-idle-delay 0)
   (setq company-selection-wrap-around t)
   (setq company-minimum-prefix-length 1)
+
   ;; Use tab key to cycle through suggestions.
   ;; ('tng' means 'tab and go')
   (company-tng-mode)
@@ -208,7 +209,8 @@
           ("\\.cpp"   (".h"))
           ("\\.h"   (".cpp"".c"))))
   (setq ff-search-directories
-        '("." "../src" "../include"))
+        '("." "../src" "../include" "/usr/include/c++/11.1.0")) ;; little hack
+  ;; for C-c o to work with stl, bound to fail on next update
 
   ;; Open .h files in cpp mode.
   ;; https://stackoverflow.com/questions/3312114/how-to-tell-emacs-to-open-h-file-in-c-mode
@@ -364,4 +366,19 @@ See 'compilation-finish-functions to for the arguments:  BUF STR."
   (add-hook 'xref-backend-functions #'dumb-jump-xref-activate))
 
 (use-package markdown-preview-eww)
+
+
+;; r
+(use-package ess
+  :init (require 'ess-r-mode))
+
+;; haskell
+(use-package haskell-mode
+  :config
+  (define-key haskell-mode-map (kbd "<f8>") 'haskell-navigate-imports)
+  )
+
+;; polymode R markdown -- not yet set up
+(use-package poly-markdown)
+
 ;;; init.el ends here
