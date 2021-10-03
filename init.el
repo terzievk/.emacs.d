@@ -94,12 +94,6 @@
     (setq exec-path (split-string path-from-shell path-separator))))
 (when window-system (set-exec-path-from-shell-PATH))
 
-;;  open "*.rkt" files in racket-mode
-(add-to-list 'auto-mode-alist '("\\.rkt\\'" . racket-mode))
-
-;;  open "*.scm" files in racket-mode
-(add-to-list 'auto-mode-alist '("\\.scm\\'" . racket-mode))
-
 ;; use-package: A use-package declaration for simplifying your .emacs
 (unless (package-installed-p 'use-package)
   (package-install 'use-package))
@@ -328,7 +322,7 @@ See 'compilation-finish-functions to for the arguments:  BUF STR."
   "Indent the entire buffer using the default indenting scheme."
   (interactive)
   ;; when in the listed modes do your thing
-  (when (derived-mode-p 'cc-mode 'c++-mode 'emacs-lisp-mode)
+  (when (derived-mode-p 'cc-mode 'c++-mode 'emacs-lisp-mode 'web-mode 'racket-mode)
     (save-excursion
       (delete-trailing-whitespace)
       (indent-region (point-min) (point-max) nil)
@@ -380,5 +374,60 @@ See 'compilation-finish-functions to for the arguments:  BUF STR."
 
 ;; polymode R markdown -- not yet set up
 (use-package poly-markdown)
+
+
+;; python
+(use-package lsp-python-ms
+  :ensure t
+  :init (setq lsp-python-ms-auto-install-server t)
+  :hook (python-mode . (lambda ()
+                         (require 'lsp-python-ms)
+                         (lsp))))  ; or lsp-deferred
+
+(use-package blacken
+  :config
+  (add-hook 'python-mode-hook 'blacken-mode))
+
+;; ace-window Quickly switch windows in Emacs
+(use-package ace-window
+  :config
+  (global-set-key (kbd "M-o") 'ace-window))
+
+;; web-mode
+(use-package web-mode
+  :ensure t
+  ;; :custom
+  ;; (web-mode-markup-indent-offset 2)
+  ;; (web-mode-css-indent-offset 2)
+  ;; (web-mode-code-indent-offset 2)
+  :config
+  (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
+  ;; to do: read some elisp regex...
+  ;;  (add-to-list 'auto-mode-alist '("\\.html$" . web-mode))
+
+  ;; Frankenstein 1.0 relic
+  ;; my first not copy-paste emacs customization
+  ;; save and open in browser the current file
+  (defun my-save-and-open-in-browser ()
+    "Save the current buffer and open it in the default browser."
+    (interactive)
+    (save-buffer)
+    (browse-url-of-file))
+  (eval-after-load 'web-mode
+    '(define-key web-mode-map [f5] 'my-save-and-open-in-browser))
+
+  )
+
+;; racket
+(use-package racket-mode
+  :ensure t
+  :config
+  ;;  open "*.rkt" files in racket-mode
+  (add-to-list 'auto-mode-alist '("\\.rkt\\'" . racket-mode))
+  ;; f5 instead of C-c C-c
+  (add-hook 'racket-mode-hook
+            (lambda ()
+              (define-key racket-mode-map (kbd "<f5>") 'racket-run)))
+  )
 
 ;;; init.el ends here
