@@ -393,6 +393,36 @@ See 'compilation-finish-functions to for the arguments:  BUF STR."
   :config
   (global-set-key (kbd "M-o") 'ace-window))
 
+;; Frankenstein 1.0 relic
+;; my first not copy-paste emacs customization
+;; save and open in browser the current file
+(defun my-save-and-open-in-browser ()
+  "Save the current buffer and open it in the default browser."
+  (interactive)
+  (save-buffer)
+  (buffer-name)
+  ;; little hack to match current web use case:
+  ;; if the file is opened in web mode and isn't a *.html
+  ;; find the single html in the parent directory and open it
+  ;; NB! assumes there exist only 1 such html
+
+  ;; (browse-url-of-file))
+  (let* ((my-current-buffer (file-name-nondirectory buffer-file-name))
+         ;; (my-current-html "index.html")
+         (my-parent-directory
+          (file-name-directory
+           (directory-file-name
+            (file-name-directory buffer-file-name))))
+         (my-current-html
+          (car (directory-files my-parent-directory t "\\.html?\\'"))))
+    (if (string= "html" (file-name-extension buffer-file-name))
+        (browse-url-of-file)
+      (progn
+        (find-file my-current-html)
+        ;;(save-buffer)  ;; I don't think I'll need this but idk...
+        (browse-url-of-file)
+        (switch-to-buffer my-current-buffer)))))
+
 ;; web-mode
 (use-package web-mode
   :ensure t
@@ -402,43 +432,18 @@ See 'compilation-finish-functions to for the arguments:  BUF STR."
   ;; (web-mode-code-indent-offset 2)
   :config
   (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
-  (add-to-list 'auto-mode-alist '("\\.css?\\'" . web-mode))
-  (add-to-list 'auto-mode-alist '("\\.js?\\'" . web-mode))
   ;; to do: read some elisp regex...
   ;;  (add-to-list 'auto-mode-alist '("\\.html$" . web-mode))
 
-  ;; Frankenstein 1.0 relic
-  ;; my first not copy-paste emacs customization
-  ;; save and open in browser the current file
-  (defun my-save-and-open-in-browser ()
-    "Save the current buffer and open it in the default browser."
-    (interactive)
-    (save-buffer)
-    (buffer-name)
-    ;; little hack to match current web use case:
-    ;; if the file is opened in web mode and isn't a *.html
-    ;; find the single html in the parent directory and open it
-    ;; NB! assumes there exist only 1 such html
-
-    ;; (browse-url-of-file))
-    (let* ((my-current-buffer (file-name-nondirectory buffer-file-name))
-           ;; (my-current-html "index.html")
-           (my-parent-directory
-            (file-name-directory
-             (directory-file-name
-              (file-name-directory buffer-file-name))))
-           (my-current-html
-            (car (directory-files my-parent-directory t "\\.html?\\'"))))
-      (if (string= "html" (file-name-extension buffer-file-name))
-          (browse-url-of-file)
-        (progn
-          (find-file my-current-html)
-          ;;(save-buffer)  ;; I don't think I'll need this but idk...
-          (browse-url-of-file)
-          (switch-to-buffer my-current-buffer)))))
   (eval-after-load 'web-mode
     '(define-key web-mode-map [f5] 'my-save-and-open-in-browser))
   )
+
+;; css-mode
+(use-package css-mode
+  :config
+  (eval-after-load 'css-mode
+    '(define-key css-mode-map [f5] 'my-save-and-open-in-browser)))
 
 ;; racket
 (use-package racket-mode
