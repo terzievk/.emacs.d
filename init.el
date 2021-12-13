@@ -328,8 +328,14 @@ See 'compilation-finish-functions to for the arguments:  BUF STR."
       (indent-region (point-min) (point-max) nil)
       (untabify (point-min) (point-max)))))
 
-;; go
-(use-package lsp-mode)
+;; lsp
+;; https://emacs-lsp.github.io/lsp-mode/page/installation/
+(use-package lsp-mode
+  :hook (;; replace XXX-mode with concrete major-mode(e. g. python-mode)
+         (js-mode . lsp)
+         ;; if you want which-key integration
+         (lsp-mode . lsp-enable-which-key-integration))
+  :commands lsp)
 
 (use-package go-mode
   :config
@@ -444,6 +450,22 @@ See 'compilation-finish-functions to for the arguments:  BUF STR."
   :config
   (eval-after-load 'css-mode
     '(define-key css-mode-map [f5] 'my-save-and-open-in-browser)))
+
+
+;; js
+;; don't forget to install npm:
+;; https://archlinux.org/packages/community/x86_64/nodejs/
+;; lsp:
+;; https://emacs-lsp.github.io/lsp-mode/page/lsp-typescript/
+;; some help on usage:
+;; https://emacs-lsp.github.io/lsp-mode/tutorials/reactjs-tutorial/
+(with-eval-after-load 'js
+  (define-key js-mode-map [f5] 'my-save-and-open-in-browser))
+
+;; this was moved to: (use-package lsp-mode)
+;; see: https://emacs-lsp.github.io/lsp-mode/page/installation/
+;; (add-hook 'js-mode-hook #'lsp)
+
 
 ;; racket
 (use-package racket-mode
