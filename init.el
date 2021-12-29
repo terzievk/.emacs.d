@@ -309,7 +309,7 @@ See URL `https://github.com/cpplint/cpplint'."
 See 'compilation-finish-functions to for the arguments:  BUF STR."
   (if (null (string-match ".*exited abnormally.*" str))
       (progn
-                                        ;        (kill-buffer (process-buffer (get-process "shell")))
+        ;;        (kill-buffer (process-buffer (get-process "shell")))
         (shell)
         (message "No Compilation Errors!"))))
 
@@ -322,7 +322,8 @@ See 'compilation-finish-functions to for the arguments:  BUF STR."
   "Indent the entire buffer using the default indenting scheme."
   (interactive)
   ;; when in the listed modes do your thing
-  (when (derived-mode-p 'cc-mode 'c++-mode 'emacs-lisp-mode 'web-mode 'racket-mode)
+  (when (derived-mode-p 'cc-mode 'c++-mode 'emacs-lisp-mode 'web-mode 'racket-mode
+                        'css-mode 'js-mode)
     (save-excursion
       (delete-trailing-whitespace)
       (indent-region (point-min) (point-max) nil)
@@ -466,6 +467,7 @@ See 'compilation-finish-functions to for the arguments:  BUF STR."
 ;; see: https://emacs-lsp.github.io/lsp-mode/page/installation/
 ;; (add-hook 'js-mode-hook #'lsp)
 
+(setq js-indent-level 2)
 
 ;; racket
 (use-package racket-mode
@@ -478,5 +480,10 @@ See 'compilation-finish-functions to for the arguments:  BUF STR."
             (lambda ()
               (define-key racket-mode-map (kbd "<f5>") 'racket-run)))
   )
+
+;; yaml-mode
+(use-package yaml-mode
+  :config
+  (add-to-list 'auto-mode-alist '("\\.yml\\'" . yaml-mode)))
 
 ;;; init.el ends here
