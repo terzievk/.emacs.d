@@ -334,6 +334,7 @@ See 'compilation-finish-functions to for the arguments:  BUF STR."
 (use-package lsp-mode
   :hook (;; replace XXX-mode with concrete major-mode(e. g. python-mode)
          (js-mode . lsp)
+         (php-mode . lsp)
          ;; if you want which-key integration
          (lsp-mode . lsp-enable-which-key-integration))
   :commands lsp)
@@ -485,5 +486,11 @@ See 'compilation-finish-functions to for the arguments:  BUF STR."
 (use-package yaml-mode
   :config
   (add-to-list 'auto-mode-alist '("\\.yml\\'" . yaml-mode)))
+
+;; php
+(use-package php-mode
+  :ensure t
+  :mode
+  ("\\.php\\'" . php-mode))
 
 ;;; init.el ends here
