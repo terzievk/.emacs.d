@@ -493,4 +493,14 @@ See 'compilation-finish-functions to for the arguments:  BUF STR."
   :mode
   ("\\.php\\'" . php-mode))
 
+;; swift: https://github.com/emacs-lsp/lsp-sourcekit
+;; competion doesn't work, see:  https://github.com/emacs-lsp/lsp-mode/issues/3028
+(use-package lsp-sourcekit
+  :after lsp-mode
+  :config
+  (setq lsp-sourcekit-executable "/usr/lib/swift/bin/sourcekit-lsp"))
+
+(use-package swift-mode
+  :hook (swift-mode . (lambda () (lsp))))
+
 ;;; init.el ends here
