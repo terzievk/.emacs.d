@@ -503,4 +503,7 @@ See 'compilation-finish-functions to for the arguments:  BUF STR."
 (use-package swift-mode
   :hook (swift-mode . (lambda () (lsp))))
 
+;;example erc config: https://codeberg.org/jao/elibs/src/branch/main/attic/misc.org
+(use-package erc
+  :init (setq erc-server "irc.libera.chat"))
 ;;; init.el ends here
