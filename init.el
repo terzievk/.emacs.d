@@ -336,7 +336,10 @@ See 'compilation-finish-functions to for the arguments:  BUF STR."
          (js-mode . lsp)
          (php-mode . lsp)
          ;; if you want which-key integration
-         (lsp-mode . lsp-enable-which-key-integration))
+         (lsp-mode . lsp-enable-which-key-integration)
+         ;; https://emacs-lsp.github.io/lsp-haskell/
+         (haskell-mode . lsp)
+         (haskell-literate-mode . lsp))
   :commands lsp)
 
 (use-package go-mode
@@ -377,8 +380,9 @@ See 'compilation-finish-functions to for the arguments:  BUF STR."
 ;; haskell
 (use-package haskell-mode
   :config
-  (define-key haskell-mode-map (kbd "<f8>") 'haskell-navigate-imports)
-  )
+  ;; (define-key haskell-mode-map (kbd "<f8>") 'haskell-navigate-imports)
+  ;; http://haskell.github.io/haskell-mode/manual/latest/Interactive-Haskell.html#Interactive-Haskell
+  (define-key haskell-mode-map (kbd "<f5>") 'haskell-process-load-or-reload))
 
 ;; polymode R markdown -- not yet set up
 (use-package poly-markdown)
