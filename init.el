@@ -48,7 +48,8 @@
 
 
 ;; load in fullscreen
-(add-to-list 'initial-frame-alist '(fullscreen . maximized))
+(add-to-list 'default-frame-alist '(fullscreen . maximized))
+
 
 ;; don't display the help screen on startup
 (setq inhibit-startup-screen t)
