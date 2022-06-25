@@ -103,6 +103,12 @@
 ;; equivalent to setting ":ensure t" on each call to use-package
 (setq use-package-always-ensure t)
 
+(use-package benchmark-init
+  :ensure t
+  :config
+  ;; To disable collection of benchmark data after init is done.
+  (add-hook 'after-init-hook 'benchmark-init/deactivate))
+
 ;; show line number
 ;;(global-display-line-numbers-mode t)
 (use-package nlinum-relative
@@ -309,7 +315,8 @@ See URL `https://github.com/cpplint/cpplint'."
 See 'compilation-finish-functions to for the arguments:  BUF STR."
   (if (null (string-match ".*exited abnormally.*" str))
       (progn
-        ;;        (kill-buffer (process-buffer (get-process "shell")))
+        ;; (kill-buffer (process-buffer (get-process "shell")))
+        (switch-to-buffer-other-frame buf)
         (shell)
         (message "No Compilation Errors!"))))
 
@@ -510,4 +517,14 @@ See 'compilation-finish-functions to for the arguments:  BUF STR."
 ;;example erc config: https://codeberg.org/jao/elibs/src/branch/main/attic/misc.org
 (use-package erc
   :init (setq erc-server "irc.libera.chat"))
+
+
+;; https://www.emacswiki.org/emacs/EmacsAsDaemon#:~:text=The%20simplest%20way%20to%20stop,the%20associated%20emacs%20server%20instance.
+;; define function to shutdown emacs server instance
+(defun server-shutdown ()
+  "Save buffers, Quit, and Shutdown (kill) server."
+  (interactive)
+  (save-some-buffers)
+  (kill-emacs)
+  )
 ;;; init.el ends here
