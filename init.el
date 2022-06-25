@@ -502,7 +502,18 @@ See 'compilation-finish-functions to for the arguments:  BUF STR."
 (use-package php-mode
   :ensure t
   :mode
-  ("\\.php\\'" . php-mode))
+  ("\\.php\\'" . php-mode)
+  :config
+  (define-key php-mode-map (kbd "<f5>") 'my-temp))
+
+;;; ain't nobody got time to type
+(defun my-temp ()
+  "Temp shortcut for current projest.
+Save, allign and open `localhost/project`."
+  (interactive)
+  (lsp-format-buffer)
+  (save-buffer)
+  (browse-url-chrome "localhost/project"))
 
 ;; swift: https://github.com/emacs-lsp/lsp-sourcekit
 ;; competion doesn't work, see:  https://github.com/emacs-lsp/lsp-mode/issues/3028
