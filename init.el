@@ -210,7 +210,7 @@
           ("\\.cpp"   (".h"))
           ("\\.h"   (".cpp"".c"))))
   (setq ff-search-directories
-        '("." "../src" "../include" "/usr/include/c++/11.1.0")) ;; little hack
+        '("." "../sources" "../includes" "/usr/include/c++/11.1.0")) ;; little hack
   ;; for C-c o to work with stl, bound to fail on next update
 
   ;; Open .h files in cpp mode.
