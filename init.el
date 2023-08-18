@@ -157,6 +157,9 @@
 (use-package iedit
   :bind (("C-;" . iedit-mode)))
 
+;; sudo-edit: Utilities for opening files with sudo
+(require 'sudo-edit)
+
 ;; ix: simple emacs client to http://ix.io cmdline pastebin
 (use-package ix)
 
