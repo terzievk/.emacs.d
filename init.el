@@ -351,7 +351,7 @@ See URL `https://github.com/cpplint/cpplint'."
 ;; faster recompile
 (global-set-key [f5] 'recompile)
 
-;; default compile command
+;; c++ default compile command
 (add-hook 'c++-mode-hook
           (lambda ()
             (unless (or (file-exists-p "makefile")
@@ -367,6 +367,17 @@ See URL `https://github.com/cpplint/cpplint'."
                            " -pedantic-errors"
                            " -Wall -Weffc++ -Wextra -Wconversion -Wsign-conversion"
                            " -Werror")))))
+;; c default compile command
+(add-hook 'c-mode-hook
+          (lambda ()
+            (unless (or (file-exists-p "makefile")
+                        (file-exists-p "Makefile"))
+              (set (make-local-variable 'compile-command)
+                   ;; name execs f for ease of use
+                   (concat "g++ "
+                           buffer-file-name
+                           " -o f")))))
+
 
 
 ;; save all buffers for me before compilation
@@ -603,3 +614,7 @@ Save, allign and open `localhost/project`."
   (kill-emacs)
   )
 ;;; init.el ends here
+
+;;;; agda
+(load-file (let ((coding-system-for-read 'utf-8))
+             (shell-command-to-string "agda-mode locate")))
