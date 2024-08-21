@@ -374,7 +374,7 @@ See URL `https://github.com/cpplint/cpplint'."
                         (file-exists-p "Makefile"))
               (set (make-local-variable 'compile-command)
                    ;; name execs f for ease of use
-                   (concat "g++ "
+                   (concat "gcc "
                            buffer-file-name
                            " -o f")))))
 
