@@ -235,13 +235,12 @@
   :config
   (add-to-list 'company-backends 'company-c-headers)
   ;; list generated with: gcc -xc++ -E -v -
-  (add-to-list 'company-c-headers-path-system "/usr/lib/gcc/x86_64-pc-linux-gnu/12.2.0/../../../../include/c++/12.2.0")
-  (add-to-list 'company-c-headers-path-system "/usr/lib/gcc/x86_64-pc-linux-gnu/12.2.0/../../../../include/c++/12.2.0/x86_64-pc-linux-gnu")
-  (add-to-list 'company-c-headers-path-system "/usr/lib/gcc/x86_64-pc-linux-gnu/12.2.0/../../../../include/c++/12.2.0/backward")
-  (add-to-list 'company-c-headers-path-system "/usr/lib/gcc/x86_64-pc-linux-gnu/12.2.0/include")
+  (add-to-list 'company-c-headers-path-system "/usr/lib/gcc/x86_64-pc-linux-gnu/14.2.1/../../../../include/c++/14.2.1")
+  (add-to-list 'company-c-headers-path-system "/usr/lib/gcc/x86_64-pc-linux-gnu/14.2.1/../../../../include/c++/14.2.1/x86_64-pc-linux-gnu")
+  (add-to-list 'company-c-headers-path-system "/usr/lib/gcc/x86_64-pc-linux-gnu/14.2.1/../../../../include/c++/14.2.1/backward")
+  (add-to-list 'company-c-headers-path-system "/usr/lib/gcc/x86_64-pc-linux-gnu/14.2.1/include")
   (add-to-list 'company-c-headers-path-system "/usr/local/include")
-  (add-to-list 'company-c-headers-path-system "/usr/lib/gcc/x86_64-pc-linux-gnu/12.2.0/include-fixed")
-
+  (add-to-list 'company-c-headers-path-system "/usr/lib/gcc/x86_64-pc-linux-gnu/14.2.1/include-fixed")
   (add-to-list 'company-c-headers-path-system "/usr/include")
   )
 
@@ -613,8 +612,9 @@ Save, allign and open `localhost/project`."
   (save-some-buffers)
   (kill-emacs)
   )
-;;; init.el ends here
 
-;;;; agda
+;; agda
 (load-file (let ((coding-system-for-read 'utf-8))
              (shell-command-to-string "agda-mode locate")))
+
+;;; init.el ends here
