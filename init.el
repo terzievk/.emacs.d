@@ -587,7 +587,7 @@ Save, allign and open `localhost/project`."
   (interactive)
   (lsp-format-buffer)
   (save-buffer)
-  (browse-url-chrome "127.0.0.1"))
+  (browse-url-chrome "localhost/project/web"))
 
 ;; swift: https://github.com/emacs-lsp/lsp-sourcekit
 ;; competion doesn't work, see:  https://github.com/emacs-lsp/lsp-mode/issues/3028
