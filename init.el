@@ -112,11 +112,11 @@
 
 ;; show line number
 ;;(global-display-line-numbers-mode t)
-(use-package nlinum-relative
-  :config
-  ;; something else you want
-  (add-hook 'prog-mode-hook 'nlinum-relative-mode)
-  (setq nlinum-relative-current-symbol ""))
+;; (use-package nlinum-relative
+;;   :config
+;;   ;; something else you want
+;;   (add-hook 'prog-mode-hook 'nlinum-relative-mode)
+;;   (setq nlinum-relative-current-symbol ""))
 
 ;; evil: extensible vi layer for Emacs
 (use-package evil
@@ -209,7 +209,7 @@
   :bind (("C-;" . iedit-mode)))
 
 ;; sudo-edit: Utilities for opening files with sudo
-(require 'sudo-edit)
+                                        ; (require 'sudo-edit)
 
 ;; ix: simple emacs client to http://ix.io cmdline pastebin
 (use-package ix)
@@ -331,9 +331,9 @@ See URL `https://github.com/cpplint/cpplint'."
   (ranger-override-dired-mode t))
 
 ;; ;; autopair: Automagically pair braces and quotes in emacs like TextMate
-(use-package autopair
-  :config
-  (autopair-global-mode))
+;; (use-package autopair
+;;   :config
+;;   (autopair-global-mode))
 
 
 ;; highlight-parentheses: highlight surrounding parentheses
@@ -613,8 +613,8 @@ Save, allign and open `localhost/project`."
   (kill-emacs)
   )
 
-;; agda
-(load-file (let ((coding-system-for-read 'utf-8))
-             (shell-command-to-string "agda-mode locate")))
+;; ;; agda
+;; (load-file (let ((coding-system-for-read 'utf-8))
+;;              (shell-command-to-string "agda-mode locate")))
 
 ;;; init.el ends here
