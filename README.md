@@ -9,6 +9,5 @@ Tip2: for C++ you should install the irony mode server(M-x irony-install-server)
 https://github.com/Sarcasm/irony-mode/issues/592
 
 I recently temprarily commented out a few packages. Here is the list:
-- nlinum-relative (deprecated)
 - sudo-edit
 - agda
