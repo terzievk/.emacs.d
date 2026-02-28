@@ -333,12 +333,6 @@ See URL `https://github.com/cpplint/cpplint'."
   :config
   (ranger-override-dired-mode t))
 
-;; ;; autopair: Automagically pair braces and quotes in emacs like TextMate
-;; (use-package autopair
-;;   :config
-;;   (autopair-global-mode))
-
-
 ;; highlight-parentheses: highlight surrounding parentheses
 (use-package highlight-parentheses
   ;; just use the old and tested config for now
