@@ -1,4 +1,5 @@
-# Completion is a futile illusion. This is a system. It grows, get's old, get's updated, and get's improved as time goes by.
+# my emacs config
+### Completion is a futile illusion. This is a system. It grows, get's old, get's updated, and get's improved as time goes by.
 
 Tip: when downloading for the first time clear all the start-up errors because you might be missing some packages otherwise.
 
