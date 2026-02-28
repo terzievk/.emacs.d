@@ -78,6 +78,9 @@
 (set-terminal-coding-system 'utf-8)
 (set-keyboard-coding-system 'utf-8)
 
+;; enable electric-pair-mode to match pairs
+(electric-pair-mode 1)
+
 ;; highlight the other parenthesis of the pair
 (show-paren-mode t)
 (setq show-paren-delay 0)
