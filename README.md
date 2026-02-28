@@ -7,3 +7,9 @@ Tip2: for C++ you should install the irony mode server(M-x irony-install-server)
 - get the irony dependancies handled (for Arch clang and llvm)
 - there's a know issues with finding the irony version, see:
 https://github.com/Sarcasm/irony-mode/issues/592
+
+I recently temprarily commented out a few packages. Here is the list:
+- nlinum-relative (deprecated)
+- sudo-edit
+- autopair (deprecated)
+- agda
