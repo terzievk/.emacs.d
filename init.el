@@ -1,7 +1,7 @@
 ;;; init.el --- my init file
 ;;; Commentary:
-;;; Frankenstein 2.0
-;;;  This is the second version of my old config, adapted to use-package
+;;; Frankenstein 3.0
+;;;  This is the third version of my old config, adapted to use-package
 ;;; and  mixed in with things I liked mainly from the following:
 ;;;   https://github.com/bbatsov/emacs.d
 ;;;   https://github.com/triffon/emacs-config
@@ -101,9 +101,12 @@
 ;; use-package: A use-package declaration for simplifying your .emacs
 (unless (package-installed-p 'use-package)
   (package-install 'use-package))
+
 (require 'use-package)
+
 ;; get information for package loads
 (setq use-package-verbose t)
+
 ;; equivalent to setting ":ensure t" on each call to use-package
 (setq use-package-always-ensure t)
 
@@ -153,62 +156,21 @@
   :config
   (setq magit-view-git-manual-method 'man))
 
-;; ;; helm: Emacs incremental completion and selection narrowing framework
-;; (use-package helm
-;;   :config
-;;   ;;; extended config from: https://tuhdo.github.io/helm-intro.html
-
-;;   ;; helm-config replaced with helm-autoloads
-;;   ;;  https://github.com/emacs-helm/helm/commit/e81fbbc687705595ab65ae5cd3bdf93c17a90743
-
-;;   ;;  (require 'helm-config)
-;;   (require 'helm-autoloads)
-
-;;   ;; The default "C-x c" is quite close to "C-x C-c", which quits Emacs.
-;;   ;; Changed to "C-c h". Note: We must set "C-c h" globally, because we
-;;   ;; cannot change `helm-command-prefix-key' once `helm-config' is loaded.
-;;   (global-set-key (kbd "C-c h") 'helm-command-prefix)
-;;   (global-unset-key (kbd "C-x c"))
-
-;;   (define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action) ; rebind tab to run persistent action
-;;   (define-key helm-map (kbd "C-i") 'helm-execute-persistent-action) ; make TAB work in terminal
-;;   (define-key helm-map (kbd "C-z")  'helm-select-action) ; list actions using C-z
-
-;;   (when (executable-find "curl")
-;;     (setq helm-google-suggest-use-curl-p t))
-
-;;   (setq helm-split-window-in-side-p           t ; open helm buffer inside current window, not occupy whole other window
-;;         helm-move-to-line-cycle-in-source     t ; move to end or beginning of source when reaching top or bottom of source.
-;;         helm-ff-search-library-in-sexp        t ; search for library in `require' and `declare-function' sexp.
-;;         helm-scroll-amount                    8 ; scroll 8 lines other window using M-<next>/M-<prior>
-;;         helm-ff-file-name-history-use-recentf t
-;;         helm-echo-input-in-header-line t)
-
-;;   (defun spacemacs//helm-hide-minibuffer-maybe ()
-;;     "Hide minibuffer in Helm session if we use the header line as input field."
-;;     (when (with-helm-buffer helm-echo-input-in-header-line)
-;;       (let ((ov (make-overlay (point-min) (point-max) nil nil t)))
-;;         (overlay-put ov 'window (selected-window))
-;;         (overlay-put ov 'face
-;;                      (let ((bg-color (face-background 'default nil)))
-;;                        `(:background ,bg-color :foreground ,bg-color)))
-;;         (setq-local cursor-type nil))))
-
-
-;;   (add-hook 'helm-minibuffer-set-up-hook
-;;             'spacemacs//helm-hide-minibuffer-maybe)
-
-;;   (setq helm-autoresize-max-height 0)
-;;   (setq helm-autoresize-min-height 20)
-;;   (helm-autoresize-mode 1)
-
-;;   (helm-mode 1))
-
 ;; zenburn-theme: The Zenburn colour theme ported to Emacs
 (use-package zenburn-theme
   :ensure t
   :config
   (load-theme 'zenburn t))
+
+;; ranger:
+(use-package ranger
+  :config
+  (ranger-override-dired-mode t))
+
+;;example erc config: https://codeberg.org/jao/elibs/src/branch/main/attic/misc.org
+(use-package erc
+  :init (setq erc-server "irc.libera.chat"))
+
 
 ;; iedit: Edit multiple regions in the same way simultaneously
 (use-package iedit
@@ -278,12 +240,6 @@
   ;; https://stackoverflow.com/questions/3312114/how-to-tell-emacs-to-open-h-file-in-c-mode
   (add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode)))
 
-;; (use-package semantic
-;;   :config
-;;   (global-semanticdb-minor-mode 1)
-;;   (global-semantic-idle-scheduler-mode 1)
-;;   (semantic-mode 1))
-
 ;; irony
 (use-package irony
   :config
@@ -317,24 +273,6 @@ See URL `https://github.com/cpplint/cpplint'."
     :error-patterns
     ((error line-start (file-name) ":" line ":" (message) line-end))
     :modes (c-mode c++-mode)))
-
-;; yasnippet: A template system for Emacs
-(use-package yasnippet
-  :config
-  (yas-global-mode 1)
-  ;; Remove Yasnippet's default tab key binding
-  (define-key yas-minor-mode-map (kbd "<tab>") nil)
-  (define-key yas-minor-mode-map (kbd "TAB") nil)
-  ;; Set Yasnippet's key binding to shift+tab
-  (define-key yas-minor-mode-map (kbd "<backtab>") 'yas-expand)
-  )
-
-
-(use-package yasnippet-snippets)
-;; ranger:
-(use-package ranger
-  :config
-  (ranger-override-dired-mode t))
 
 ;; highlight-parentheses: highlight surrounding parentheses
 (use-package highlight-parentheses
@@ -383,6 +321,7 @@ See URL `https://github.com/cpplint/cpplint'."
 (setq compilation-ask-about-save nil)
 
 (add-hook 'compilation-finish-functions #'my-compile)
+
 (defun my-compile (buf str)
   "Open shell in the compilation window if compilation exits normally.
 See 'compilation-finish-functions to for the arguments:  BUF STR."
@@ -409,199 +348,15 @@ See 'compilation-finish-functions to for the arguments:  BUF STR."
       (indent-region (point-min) (point-max) nil)
       (untabify (point-min) (point-max)))))
 
-;; lsp
-;; https://emacs-lsp.github.io/lsp-mode/page/installation/
-(use-package lsp-mode
-  :hook (;; replace XXX-mode with concrete major-mode(e. g. python-mode)
-         (js-mode . lsp)
-         (php-mode . lsp)
-         ;; if you want which-key integration
-         (lsp-mode . lsp-enable-which-key-integration)
-         ;; https://emacs-lsp.github.io/lsp-haskell/
-         (haskell-mode . lsp)
-         (haskell-literate-mode . lsp))
-  :commands lsp)
-
-(use-package go-mode
-  :config
-  (add-hook 'go-mode-hook 'lsp-deferred)
-  (add-hook 'go-mode-hook 'my-go-mode-hook)
-  (defun my-go-mode-hook ()
-    "Some dodgy stuff inspired by http://tleyden.github.io/blog/2014/12/02/getting-started-with-go-and-protocol-buffers/"
-    ;; Customize compile command to run go build
-    (if (not (string-match "go" compile-command))
-        (set (make-local-variable 'compile-command)
-             ;; most executables are called f for ease of use
-             "go generate && go build -v -o f && go test -v && go vet"))
-    ;; Godef jump key binding
-    (global-set-key (kbd "M-.") 'godef-jump)
-    (global-set-key (kbd "M-*") 'pop-tag-mark)
-    )
-
-  ;; Set up before-save hooks to format buffer and add/delete imports.
-  ;; Make sure you don't have other gofmt/goimports hooks enabled.
-  (defun lsp-go-install-save-hooks ()
-    (add-hook 'before-save-hook #'lsp-format-buffer t t)
-    (add-hook 'before-save-hook #'lsp-organize-imports t t))
-  (add-hook 'go-mode-hook #'lsp-go-install-save-hooks))
-
 ;; dumb-jump
 (use-package dumb-jump
   :config
   (add-hook 'xref-backend-functions #'dumb-jump-xref-activate))
 
-(use-package markdown-preview-eww)
-
-
-;; r
-(use-package ess
-  :init (require 'ess-r-mode))
-
-;; haskell
-(use-package haskell-mode
-  :config
-  ;; (define-key haskell-mode-map (kbd "<f8>") 'haskell-navigate-imports)
-  ;; http://haskell.github.io/haskell-mode/manual/latest/Interactive-Haskell.html#Interactive-Haskell
-  (define-key haskell-mode-map (kbd "<f5>") 'haskell-process-load-or-reload))
-
-;; polymode R markdown -- not yet set up
-(use-package poly-markdown)
-
-
-;; python
-(use-package lsp-python-ms
-  :ensure t
-  :init (setq lsp-python-ms-auto-install-server t)
-  :hook (python-mode . (lambda ()
-                         (require 'lsp-python-ms)
-                         (lsp))))  ; or lsp-deferred
-
-(use-package blacken
-  :config
-  (add-hook 'python-mode-hook 'blacken-mode))
-
 ;; ace-window Quickly switch windows in Emacs
 (use-package ace-window
   :config
   (global-set-key (kbd "M-o") 'ace-window))
-
-;; Frankenstein 1.0 relic
-;; my first not copy-paste emacs customization
-;; save and open in browser the current file
-(defun my-save-and-open-in-browser ()
-  "Save the current buffer and open it in the default browser."
-  (interactive)
-  (save-buffer)
-  (buffer-name)
-  ;; little hack to match current web use case:
-  ;; if the file is opened in web mode and isn't a *.html
-  ;; find the single html in the parent directory and open it
-  ;; NB! assumes there exist only 1 such html
-
-  ;; (browse-url-of-file))
-  (let* ((my-current-buffer (file-name-nondirectory buffer-file-name))
-         ;; (my-current-html "index.html")
-         (my-parent-directory
-          (file-name-directory
-           (directory-file-name
-            (file-name-directory buffer-file-name))))
-         (my-current-html
-          (car (directory-files my-parent-directory t "\\.html?\\'"))))
-    (if (string= "html" (file-name-extension buffer-file-name))
-        (browse-url-of-file)
-      (progn
-        (find-file my-current-html)
-        ;;(save-buffer)  ;; I don't think I'll need this but idk...
-        (browse-url-of-file)
-        (switch-to-buffer my-current-buffer)))))
-
-;; web-mode
-(use-package web-mode
-  :ensure t
-  ;; :custom
-  ;; (web-mode-markup-indent-offset 2)
-  ;; (web-mode-css-indent-offset 2)
-  ;; (web-mode-code-indent-offset 2)
-  :config
-  (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
-
-  ;; to do: read some elisp regex...
-  ;;  (add-to-list 'auto-mode-alist '("\\.html$" . web-mode))
-
-  (eval-after-load 'web-mode
-    '(define-key web-mode-map [f5] 'my-save-and-open-in-browser))
-  )
-
-;; css-mode
-(use-package css-mode
-  :config
-  (eval-after-load 'css-mode
-    '(define-key css-mode-map [f5] 'my-save-and-open-in-browser)))
-
-
-;; js
-;; don't forget to install npm:
-;; https://archlinux.org/packages/community/x86_64/nodejs/
-;; lsp:
-;; https://emacs-lsp.github.io/lsp-mode/page/lsp-typescript/
-;; some help on usage:
-;; https://emacs-lsp.github.io/lsp-mode/tutorials/reactjs-tutorial/
-(with-eval-after-load 'js
-  (define-key js-mode-map [f5] 'my-save-and-open-in-browser))
-
-;; this was moved to: (use-package lsp-mode)
-;; see: https://emacs-lsp.github.io/lsp-mode/page/installation/
-;; (add-hook 'js-mode-hook #'lsp)
-
-(setq js-indent-level 2)
-
-;; racket
-(use-package racket-mode
-  :ensure t
-  :config
-  ;;  open "*.rkt" files in racket-mode
-  (add-to-list 'auto-mode-alist '("\\.rkt\\'" . racket-mode))
-  ;; f5 instead of C-c C-c
-  (add-hook 'racket-mode-hook
-            (lambda ()
-              (define-key racket-mode-map (kbd "<f5>") 'racket-run)))
-  )
-
-;; yaml-mode
-(use-package yaml-mode
-  :config
-  (add-to-list 'auto-mode-alist '("\\.yml\\'" . yaml-mode)))
-
-;; php
-(use-package php-mode
-  :ensure t
-  :mode
-  ("\\.php\\'" . php-mode)
-  :config
-  (define-key php-mode-map (kbd "<f5>") 'my-temp))
-
-;;; ain't nobody got time to type
-(defun my-temp ()
-  "Temp shortcut for current projest.
-Save, allign and open `localhost/project`."
-  (interactive)
-  (lsp-format-buffer)
-  (save-buffer)
-  (browse-url-chrome "localhost/project/web"))
-
-;; swift: https://github.com/emacs-lsp/lsp-sourcekit
-;; competion doesn't work, see:  https://github.com/emacs-lsp/lsp-mode/issues/3028
-(use-package lsp-sourcekit
-  :after lsp-mode
-  :config
-  (setq lsp-sourcekit-executable "/usr/lib/swift/bin/sourcekit-lsp"))
-
-(use-package swift-mode
-  :hook (swift-mode . (lambda () (lsp))))
-
-;;example erc config: https://codeberg.org/jao/elibs/src/branch/main/attic/misc.org
-(use-package erc
-  :init (setq erc-server "irc.libera.chat"))
 
 
 ;; https://www.emacswiki.org/emacs/EmacsAsDaemon#:~:text=The%20simplest%20way%20to%20stop,the%20associated%20emacs%20server%20instance.
@@ -612,9 +367,5 @@ Save, allign and open `localhost/project`."
   (save-some-buffers)
   (kill-emacs)
   )
-
-;; ;; agda
-;; (load-file (let ((coding-system-for-read 'utf-8))
-;;              (shell-command-to-string "agda-mode locate")))
 
 ;;; init.el ends here
