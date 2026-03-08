@@ -1,4 +1,4 @@
-;;; init.el --- my init file
+;;; init.el --- my init file  -*- lexical-binding: t; -*-
 ;;; Commentary:
 ;;; Frankenstein 3.0
 ;;;  This is the third version of my old config, adapted to use-package
