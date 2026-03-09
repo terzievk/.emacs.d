@@ -171,6 +171,15 @@
 (use-package erc
   :init (setq erc-server "irc.libera.chat"))
 
+;; dumb-jump
+(use-package dumb-jump
+  :config
+  (add-hook 'xref-backend-functions #'dumb-jump-xref-activate))
+
+;; ace-window Quickly switch windows in Emacs
+(use-package ace-window
+  :config
+  (global-set-key (kbd "M-o") 'ace-window))
 
 ;; iedit: Edit multiple regions in the same way simultaneously
 (use-package iedit
@@ -181,6 +190,36 @@
 
 ;; ix: simple emacs client to http://ix.io cmdline pastebin
 (use-package ix)
+
+;; highlight-parentheses: highlight surrounding parentheses
+(use-package highlight-parentheses
+  ;; just use the old and tested config for now
+  :config
+  (define-globalized-minor-mode global-highlight-parentheses-mode
+    highlight-parentheses-mode
+    (lambda ()
+      (highlight-parentheses-mode t)))
+  (global-highlight-parentheses-mode t))
+
+;; https://www.emacswiki.org/emacs/EmacsAsDaemon#:~:text=The%20simplest%20way%20to%20stop,the%20associated%20emacs%20server%20instance.
+;; define function to shutdown emacs server instance
+(defun server-shutdown ()
+  "Save buffers, Quit, and Shutdown (kill) server."
+  (interactive)
+  (save-some-buffers)
+  (kill-emacs)
+  )
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;; c/c++ stuff
 
 ;; company: ext completion framework for Emacs
 (use-package company
@@ -274,16 +313,6 @@ See URL `https://github.com/cpplint/cpplint'."
     ((error line-start (file-name) ":" line ":" (message) line-end))
     :modes (c-mode c++-mode)))
 
-;; highlight-parentheses: highlight surrounding parentheses
-(use-package highlight-parentheses
-  ;; just use the old and tested config for now
-  :config
-  (define-globalized-minor-mode global-highlight-parentheses-mode
-    highlight-parentheses-mode
-    (lambda ()
-      (highlight-parentheses-mode t)))
-  (global-highlight-parentheses-mode t))
-
 
 ;; faster recompile
 (global-set-key [f5] 'recompile)
@@ -304,6 +333,22 @@ See URL `https://github.com/cpplint/cpplint'."
                            " -pedantic-errors"
                            " -Wall -Weffc++ -Wextra -Wconversion -Wsign-conversion"
                            " -Werror")))))
+(add-hook 'c++-ts-mode-hook
+          (lambda ()
+            (unless (or (file-exists-p "makefile")
+                        (file-exists-p "Makefile"))
+              (set (make-local-variable 'compile-command)
+                   ;; name execs f for ease of use
+                   (concat "g++ "
+                           buffer-file-name
+                           " -o f"
+                           " -std=c++2b"
+                           ;; some learncpp.com suggested options
+                           " -O2 -DNDEBUG"
+                           " -pedantic-errors"
+                           " -Wall -Weffc++ -Wextra -Wconversion -Wsign-conversion"
+                           " -Werror")))))
+                                        ;
 ;; c default compile command
 (add-hook 'c-mode-hook
           (lambda ()
@@ -348,24 +393,11 @@ See 'compilation-finish-functions to for the arguments:  BUF STR."
       (indent-region (point-min) (point-max) nil)
       (untabify (point-min) (point-max)))))
 
-;; dumb-jump
-(use-package dumb-jump
+
+(use-package treesit-auto
+  :custom
+  (treesit-auto-install 'prompt)
   :config
-  (add-hook 'xref-backend-functions #'dumb-jump-xref-activate))
-
-;; ace-window Quickly switch windows in Emacs
-(use-package ace-window
-  :config
-  (global-set-key (kbd "M-o") 'ace-window))
-
-
-;; https://www.emacswiki.org/emacs/EmacsAsDaemon#:~:text=The%20simplest%20way%20to%20stop,the%20associated%20emacs%20server%20instance.
-;; define function to shutdown emacs server instance
-(defun server-shutdown ()
-  "Save buffers, Quit, and Shutdown (kill) server."
-  (interactive)
-  (save-some-buffers)
-  (kill-emacs)
-  )
-
+  (treesit-auto-add-to-auto-mode-alist 'all)
+  (global-treesit-auto-mode))
 ;;; init.el ends here
