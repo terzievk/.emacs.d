@@ -9,6 +9,9 @@
 ;;;   https://github.com/jamiecollinson/dotfiles/blob/master/config.org/
 
 ;;; Code:
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; General emacs stuff ;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; General emacs stuff ;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; General emacs stuff ;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; start package.el with Emacs
 (require 'package)
 
@@ -46,10 +49,8 @@
 (column-number-mode t)
 (size-indication-mode t)
 
-
 ;; load in fullscreen
 (add-to-list 'default-frame-alist '(fullscreen . maximized))
-
 
 ;; don't display the help screen on startup
 (setq inhibit-startup-screen t)
@@ -85,7 +86,7 @@
 (show-paren-mode t)
 (setq show-paren-delay 0)
 
-;; copy shell path
+;; copy shell path - hack when not starting emacs from terminal
 (defun set-exec-path-from-shell-PATH ()
   "Copy the shell path since I start Emacs from the dock."
   (let ((path-from-shell
@@ -101,9 +102,12 @@
 ;; use-package: A use-package declaration for simplifying your .emacs
 (unless (package-installed-p 'use-package)
   (package-install 'use-package))
+
 (require 'use-package)
+
 ;; get information for package loads
 (setq use-package-verbose t)
+
 ;; equivalent to setting ":ensure t" on each call to use-package
 (setq use-package-always-ensure t)
 
@@ -153,57 +157,6 @@
   :config
   (setq magit-view-git-manual-method 'man))
 
-;; ;; helm: Emacs incremental completion and selection narrowing framework
-;; (use-package helm
-;;   :config
-;;   ;;; extended config from: https://tuhdo.github.io/helm-intro.html
-
-;;   ;; helm-config replaced with helm-autoloads
-;;   ;;  https://github.com/emacs-helm/helm/commit/e81fbbc687705595ab65ae5cd3bdf93c17a90743
-
-;;   ;;  (require 'helm-config)
-;;   (require 'helm-autoloads)
-
-;;   ;; The default "C-x c" is quite close to "C-x C-c", which quits Emacs.
-;;   ;; Changed to "C-c h". Note: We must set "C-c h" globally, because we
-;;   ;; cannot change `helm-command-prefix-key' once `helm-config' is loaded.
-;;   (global-set-key (kbd "C-c h") 'helm-command-prefix)
-;;   (global-unset-key (kbd "C-x c"))
-
-;;   (define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action) ; rebind tab to run persistent action
-;;   (define-key helm-map (kbd "C-i") 'helm-execute-persistent-action) ; make TAB work in terminal
-;;   (define-key helm-map (kbd "C-z")  'helm-select-action) ; list actions using C-z
-
-;;   (when (executable-find "curl")
-;;     (setq helm-google-suggest-use-curl-p t))
-
-;;   (setq helm-split-window-in-side-p           t ; open helm buffer inside current window, not occupy whole other window
-;;         helm-move-to-line-cycle-in-source     t ; move to end or beginning of source when reaching top or bottom of source.
-;;         helm-ff-search-library-in-sexp        t ; search for library in `require' and `declare-function' sexp.
-;;         helm-scroll-amount                    8 ; scroll 8 lines other window using M-<next>/M-<prior>
-;;         helm-ff-file-name-history-use-recentf t
-;;         helm-echo-input-in-header-line t)
-
-;;   (defun spacemacs//helm-hide-minibuffer-maybe ()
-;;     "Hide minibuffer in Helm session if we use the header line as input field."
-;;     (when (with-helm-buffer helm-echo-input-in-header-line)
-;;       (let ((ov (make-overlay (point-min) (point-max) nil nil t)))
-;;         (overlay-put ov 'window (selected-window))
-;;         (overlay-put ov 'face
-;;                      (let ((bg-color (face-background 'default nil)))
-;;                        `(:background ,bg-color :foreground ,bg-color)))
-;;         (setq-local cursor-type nil))))
-
-
-;;   (add-hook 'helm-minibuffer-set-up-hook
-;;             'spacemacs//helm-hide-minibuffer-maybe)
-
-;;   (setq helm-autoresize-max-height 0)
-;;   (setq helm-autoresize-min-height 20)
-;;   (helm-autoresize-mode 1)
-
-;;   (helm-mode 1))
-
 ;; zenburn-theme: The Zenburn colour theme ported to Emacs
 (use-package zenburn-theme
   :ensure t
@@ -220,6 +173,51 @@
 ;; ix: simple emacs client to http://ix.io cmdline pastebin
 (use-package ix)
 
+;; https://www.emacswiki.org/emacs/EmacsAsDaemon#:~:text=The%20simplest%20way%20to%20stop,the%20associated%20emacs%20server%20instance.
+;; define function to shutdown emacs server instance
+(defun server-shutdown ()
+  "Save buffers, Quit, and Shutdown (kill) server."
+  (interactive)
+  (save-some-buffers)
+  (kill-emacs)
+  )
+
+;; ranger:
+(use-package ranger
+  :config
+  (ranger-override-dired-mode t))
+
+;; highlight-parentheses: highlight surrounding parentheses
+(use-package highlight-parentheses
+  ;; just use the old and tested config for now
+  :config
+  (define-globalized-minor-mode global-highlight-parentheses-mode
+    highlight-parentheses-mode
+    (lambda ()
+      (highlight-parentheses-mode t)))
+  (global-highlight-parentheses-mode t))
+
+;; ace-window Quickly switch windows in Emacs
+(use-package ace-window
+  :config
+  (global-set-key (kbd "M-o") 'ace-window))
+
+;;example erc config: https://codeberg.org/jao/elibs/src/branch/main/attic/misc.org
+(use-package erc
+  :init (setq erc-server "irc.libera.chat"))
+
+;; dumb-jump
+(use-package dumb-jump
+  :config
+  (add-hook 'xref-backend-functions #'dumb-jump-xref-activate))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;end of General emacs stuff ;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;end of General emacs stuff ;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;end of General emacs stuff ;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; C/C++ mode stuff ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; C/C++ mode stuff ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; C/C++ mode stuff ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; company: ext completion framework for Emacs
 (use-package company
   :config
@@ -331,23 +329,9 @@ See URL `https://github.com/cpplint/cpplint'."
 
 
 (use-package yasnippet-snippets)
-;; ranger:
-(use-package ranger
-  :config
-  (ranger-override-dired-mode t))
-
-;; highlight-parentheses: highlight surrounding parentheses
-(use-package highlight-parentheses
-  ;; just use the old and tested config for now
-  :config
-  (define-globalized-minor-mode global-highlight-parentheses-mode
-    highlight-parentheses-mode
-    (lambda ()
-      (highlight-parentheses-mode t)))
-  (global-highlight-parentheses-mode t))
 
 
-;; faster recompile
+;; "quicker" recompile
 (global-set-key [f5] 'recompile)
 
 ;; c++ default compile command
@@ -409,6 +393,12 @@ See 'compilation-finish-functions to for the arguments:  BUF STR."
       (indent-region (point-min) (point-max) nil)
       (untabify (point-min) (point-max)))))
 
+;;;;;;;;;;;;;;;;;;;;;;;;;; end of C/C++ mode stuff ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;; end of C/C++ mode stuff ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;; end of C/C++ mode stuff ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;; end of C/C++ mode stuff ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;; end of C/C++ mode stuff ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 ;; lsp
 ;; https://emacs-lsp.github.io/lsp-mode/page/installation/
 (use-package lsp-mode
@@ -445,11 +435,6 @@ See 'compilation-finish-functions to for the arguments:  BUF STR."
     (add-hook 'before-save-hook #'lsp-organize-imports t t))
   (add-hook 'go-mode-hook #'lsp-go-install-save-hooks))
 
-;; dumb-jump
-(use-package dumb-jump
-  :config
-  (add-hook 'xref-backend-functions #'dumb-jump-xref-activate))
-
 (use-package markdown-preview-eww)
 
 
@@ -479,11 +464,6 @@ See 'compilation-finish-functions to for the arguments:  BUF STR."
 (use-package blacken
   :config
   (add-hook 'python-mode-hook 'blacken-mode))
-
-;; ace-window Quickly switch windows in Emacs
-(use-package ace-window
-  :config
-  (global-set-key (kbd "M-o") 'ace-window))
 
 ;; Frankenstein 1.0 relic
 ;; my first not copy-paste emacs customization
@@ -599,19 +579,58 @@ Save, allign and open `localhost/project`."
 (use-package swift-mode
   :hook (swift-mode . (lambda () (lsp))))
 
-;;example erc config: https://codeberg.org/jao/elibs/src/branch/main/attic/misc.org
-(use-package erc
-  :init (setq erc-server "irc.libera.chat"))
+
+;;;;;;;; ;; helm: Emacs incremental completion and selection narrowing framework
+;; (use-package helm
+;;   :config
+;;   ;;; extended config from: https://tuhdo.github.io/helm-intro.html
+
+;;   ;; helm-config replaced with helm-autoloads
+;;   ;;  https://github.com/emacs-helm/helm/commit/e81fbbc687705595ab65ae5cd3bdf93c17a90743
+
+;;   ;;  (require 'helm-config)
+;;   (require 'helm-autoloads)
+
+;;   ;; The default "C-x c" is quite close to "C-x C-c", which quits Emacs.
+;;   ;; Changed to "C-c h". Note: We must set "C-c h" globally, because we
+;;   ;; cannot change `helm-command-prefix-key' once `helm-config' is loaded.
+;;   (global-set-key (kbd "C-c h") 'helm-command-prefix)
+;;   (global-unset-key (kbd "C-x c"))
+
+;;   (define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action) ; rebind tab to run persistent action
+;;   (define-key helm-map (kbd "C-i") 'helm-execute-persistent-action) ; make TAB work in terminal
+;;   (define-key helm-map (kbd "C-z")  'helm-select-action) ; list actions using C-z
+
+;;   (when (executable-find "curl")
+;;     (setq helm-google-suggest-use-curl-p t))
+
+;;   (setq helm-split-window-in-side-p           t ; open helm buffer inside current window, not occupy whole other window
+;;         helm-move-to-line-cycle-in-source     t ; move to end or beginning of source when reaching top or bottom of source.
+;;         helm-ff-search-library-in-sexp        t ; search for library in `require' and `declare-function' sexp.
+;;         helm-scroll-amount                    8 ; scroll 8 lines other window using M-<next>/M-<prior>
+;;         helm-ff-file-name-history-use-recentf t
+;;         helm-echo-input-in-header-line t)
+
+;;   (defun spacemacs//helm-hide-minibuffer-maybe ()
+;;     "Hide minibuffer in Helm session if we use the header line as input field."
+;;     (when (with-helm-buffer helm-echo-input-in-header-line)
+;;       (let ((ov (make-overlay (point-min) (point-max) nil nil t)))
+;;         (overlay-put ov 'window (selected-window))
+;;         (overlay-put ov 'face
+;;                      (let ((bg-color (face-background 'default nil)))
+;;                        `(:background ,bg-color :foreground ,bg-color)))
+;;         (setq-local cursor-type nil))))
 
 
-;; https://www.emacswiki.org/emacs/EmacsAsDaemon#:~:text=The%20simplest%20way%20to%20stop,the%20associated%20emacs%20server%20instance.
-;; define function to shutdown emacs server instance
-(defun server-shutdown ()
-  "Save buffers, Quit, and Shutdown (kill) server."
-  (interactive)
-  (save-some-buffers)
-  (kill-emacs)
-  )
+;;   (add-hook 'helm-minibuffer-set-up-hook
+;;             'spacemacs//helm-hide-minibuffer-maybe)
+
+;;   (setq helm-autoresize-max-height 0)
+;;   (setq helm-autoresize-min-height 20)
+;;   (helm-autoresize-mode 1)
+
+;;   (helm-mode 1))
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;; ;; agda
 ;; (load-file (let ((coding-system-for-read 'utf-8))
