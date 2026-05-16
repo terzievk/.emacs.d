@@ -260,7 +260,7 @@
   (c-set-offset 'case-label '+)
 
   ;; quick switch between header and implementation
-  (add-hook 'c-mode-common-hook (lambda() (local-set-key (kbd "C-c o") 'ff-find-other-file)))
+  (add-hook 'c++-ts-mode-hook (lambda() (local-set-key (kbd "C-c o") 'ff-find-other-file)))
 
   ;; this solved jumping pairs problem
   ;; https://superuser.com/questions/255510/how-to-toggle-between-cpp-and-hpp-that-are-not-in-the-same-directory
@@ -274,7 +274,7 @@
 
   ;; Open .h files in cpp mode.
   ;; https://stackoverflow.com/questions/3312114/how-to-tell-emacs-to-open-h-file-in-c-mode
-  (add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode)))
+  (add-to-list 'auto-mode-alist '("\\.h\\'" . c++-ts-mode)))
 
 ;; (use-package semantic
 ;;   :config
@@ -335,7 +335,7 @@ See URL `https://github.com/cpplint/cpplint'."
 (global-set-key [f5] 'recompile)
 
 ;; c++ default compile command
-(add-hook 'c++-mode-hook
+(add-hook 'c++-ts-mode-hook
           (lambda ()
             (unless (or (file-exists-p "makefile")
                         (file-exists-p "Makefile"))
@@ -386,12 +386,20 @@ See 'compilation-finish-functions to for the arguments:  BUF STR."
   "Indent the entire buffer using the default indenting scheme."
   (interactive)
   ;; when in the listed modes do your thing
-  (when (derived-mode-p 'cc-mode 'c++-mode 'emacs-lisp-mode 'web-mode 'racket-mode
+  (when (derived-mode-p 'c++-ts-mode 'cc-mode 'c++-mode 'emacs-lisp-mode 'web-mode 'racket-mode
                         'css-mode 'js-mode)
     (save-excursion
       (delete-trailing-whitespace)
       (indent-region (point-min) (point-max) nil)
       (untabify (point-min) (point-max)))))
+
+;; automatically install and use tree-sitter
+(use-package treesit-auto
+  :custom
+  (treesit-auto-install 'prompt)
+  :config
+  (treesit-auto-add-to-auto-mode-alist 'all)
+  (global-treesit-auto-mode))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;; end of C/C++ mode stuff ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;; end of C/C++ mode stuff ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
