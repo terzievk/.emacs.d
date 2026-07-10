@@ -1,13 +1,12 @@
 ;;; init.el --- my init file
 ;;; Commentary:
-;;; Frankenstein 2.0
-;;;  This is the second version of my old config, adapted to use-package
-;;; and  mixed in with things I liked mainly from the following:
-;;;   https://github.com/bbatsov/emacs.d
-;;;   https://github.com/triffon/emacs-config
-;;;   https://tuhdo.github.io/index.html
-;;;   https://github.com/jamiecollinson/dotfiles/blob/master/config.org/
-
+;;; Frankenstein 3.0
+;;;  This is the third version of my old config.
+;;;  Based on Frankenstein 2.0 (see the tag).
+;;;
+;;; Motto: Fresh start!
+;;;
+;;;
 ;;; Code:
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; General emacs stuff ;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; General emacs stuff ;;;;;;;;;;;;;;;;;;;;;;;;;;
