@@ -140,7 +140,7 @@
 (use-package evil-collection
   :after evil
   :ensure t
-  :custom
+  :init
   ;; evil-collection-binding-overrides
   ;; make RET submit commands in shell mode in both normal or insert mode
   ;; see: https://github.com/emacs-evil/evil-collection#configure-the-repl
