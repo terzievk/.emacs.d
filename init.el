@@ -140,6 +140,14 @@
 (use-package evil-collection
   :after evil
   :ensure t
+  :custom
+  ;; evil-collection-binding-overrides
+  ;; make RET submit commands in shell mode in both normal or insert mode
+  ;; see: https://github.com/emacs-evil/evil-collection#configure-the-repl
+  (setq evil-collection-binding-overrides
+        '((repl-submit        :state (normal insert) :key ("RET" "<return>" "C-m"))
+          (repl-newline       :state nil             :key ("RET" "<return>" "C-m"))
+          (repl-force-newline :state (normal insert) :key ("S-<return>" "S-RET"))))
   :config
   (evil-collection-init))
 
