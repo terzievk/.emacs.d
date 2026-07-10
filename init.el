@@ -116,17 +116,10 @@
   ;; To disable collection of benchmark data after init is done.
   (add-hook 'after-init-hook 'benchmark-init/deactivate))
 
-;; ;; show line number
-;; (global-display-line-numbers-mode t)
+;; show line number in hybrid mode(all relative except the current)
+(setq-default display-line-numbers-type 'relative)
+(global-display-line-numbers-mode 1)
 
-;; (use-package nlinum-relative
-;;   :config
-;;   (nlinum-relative-setup-evil)
-;;   (add-hook 'prog-mode-hook 'nlinum-relative-mode)
-;;   (setq nlinum-relative-redisplay-delay 0)
-;;   (setq nlinum-relative-current-symbol "")  ;; "" to display the current line number
-;;   )
-;;
 ;; evil: extensible vi layer for Emacs
 (use-package evil
   :init
