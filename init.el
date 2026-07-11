@@ -218,6 +218,8 @@
 ;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; C/C++ mode stuff ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; C/C++ mode stuff ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; C/C++ mode stuff ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; currenlty all you need for tree-sitter with Emacs 29+
+;; see: https://github.com/renzmann/treesit-auto
 (use-package treesit-auto
   :custom
   (treesit-auto-install 'prompt)
