@@ -8,9 +8,7 @@
 ;;;
 ;;;
 ;;; Code:
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; General emacs stuff ;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; General emacs stuff ;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; General emacs stuff ;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 ;; start package.el with Emacs
 (require 'package)
 
