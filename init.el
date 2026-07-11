@@ -218,6 +218,13 @@
 ;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; C/C++ mode stuff ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; C/C++ mode stuff ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; C/C++ mode stuff ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(use-package treesit-auto
+  :custom
+  (treesit-auto-install 'prompt)
+  :config
+  (treesit-auto-add-to-auto-mode-alist 'all)
+  (global-treesit-auto-mode))
+
 ;; ;; company: ext completion framework for Emacs
 ;; (use-package company
 ;;   :config
