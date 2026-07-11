@@ -80,9 +80,32 @@
 ;; enable electric-pair-mode to match pairs
 (electric-pair-mode 1)
 
-;; highlight the other parenthesis of the pair
+;; highlight the other parentheses of the pair
 (show-paren-mode t)
 (setq show-paren-delay 0)
+
+;; highlight surrounding parentheses
+(use-package highlight-parentheses
+  :ensure t
+  :hook
+  (prog-mode . highlight-parentheses-mode)
+  (minibuffer-setup-hook . highlight-parentheses-minibuffer-setup)
+  :config
+  (setq highlight-parentheses-colors
+        '(
+          "#FF3333" ; red
+          "#39FF14"  ; green
+          "#00BFFF"  ; blue
+          "#FFD700"  ; gold
+          ))
+  (setq highlight-parentheses-background-colors
+        '(
+          "#5C1A1A"  ; dark red bg
+          "#1A4D0F"  ; dark green bg
+          "#0F3A5C"  ; dark blue bg
+          "#5C4E00"  ; dark gold bg
+          )))
+
 
 ;; copy shell path - hack when not starting emacs from terminal
 (defun set-exec-path-from-shell-PATH ()
@@ -182,20 +205,12 @@
 ;;   :config
 ;;   (add-hook 'xref-backend-functions #'dumb-jump-xref-activate))
 
-;; ;; highlight-parentheses: highlight surrounding parentheses
-;; (use-package highlight-parentheses
-;;   ;; just use the old and tested config for now
-;;   :config
-;;   (define-globalized-minor-mode global-highlight-parentheses-mode
-;;     highlight-parentheses-mode
-;;     (lambda ()
-;;       (highlight-parentheses-mode t)))
-;;   (global-highlight-parentheses-mode t))
 
 ;; ;; ace-window Quickly switch windows in Emacs
 ;; (use-package ace-window
 ;;   :config
 ;;   (global-set-key (kbd "M-o") 'ace-window))
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;end of General emacs stuff ;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;end of General emacs stuff ;;;;;;;;;;;;;;;;;;;;;;;;;;;
