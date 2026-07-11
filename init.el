@@ -116,10 +116,6 @@
   ;; To disable collection of benchmark data after init is done.
   (add-hook 'after-init-hook 'benchmark-init/deactivate))
 
-;; ;; show line number in hybrid mode(all relative except the current)
-;; (setq-default display-line-numbers-type 'relative)
-;; (global-display-line-numbers-mode 1)
-
 ;; evil: extensible vi layer for Emacs
 (use-package evil
   :init
@@ -167,13 +163,26 @@
 (use-package iedit
   :bind (("C-;" . iedit-mode)))
 
-;; sudo-edit: Utilities for opening files with sudo
-                                        ; (require 'sudo-edit)
-
 ;; ranger:
 (use-package ranger
   :config
   (ranger-override-dired-mode t))
+
+;;example erc config: https://codeberg.org/jao/elibs/src/branch/main/attic/misc.org
+(use-package erc
+  :init (setq erc-server "irc.libera.chat"))
+
+;; ;; show line number in hybrid mode(all relative except the current)
+;; (setq-default display-line-numbers-type 'relative)
+;; (global-display-line-numbers-mode 1)
+
+;; ;; sudo-edit: Utilities for opening files with sudo
+;; (require 'sudo-edit)
+
+;; ;; dumb-jump
+;; (use-package dumb-jump
+;;   :config
+;;   (add-hook 'xref-backend-functions #'dumb-jump-xref-activate))
 
 ;; ;; highlight-parentheses: highlight surrounding parentheses
 ;; (use-package highlight-parentheses
@@ -189,15 +198,6 @@
 ;; (use-package ace-window
 ;;   :config
 ;;   (global-set-key (kbd "M-o") 'ace-window))
-
-;;example erc config: https://codeberg.org/jao/elibs/src/branch/main/attic/misc.org
-(use-package erc
-  :init (setq erc-server "irc.libera.chat"))
-
-;; ;; dumb-jump
-;; (use-package dumb-jump
-;;   :config
-;;   (add-hook 'xref-backend-functions #'dumb-jump-xref-activate))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;end of General emacs stuff ;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;end of General emacs stuff ;;;;;;;;;;;;;;;;;;;;;;;;;;;
