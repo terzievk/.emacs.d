@@ -170,9 +170,6 @@
 ;; sudo-edit: Utilities for opening files with sudo
                                         ; (require 'sudo-edit)
 
-;; ix: simple emacs client to http://ix.io cmdline pastebin
-(use-package ix)
-
 ;; ranger:
 (use-package ranger
   :config
