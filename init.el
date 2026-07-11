@@ -84,27 +84,6 @@
 (show-paren-mode t)
 (setq show-paren-delay 0)
 
-;; ;; highlight surrounding parentheses
-;; (use-package highlight-parentheses
-;;   :ensure t
-;;   :hook
-;;   (prog-mode . highlight-parentheses-mode)
-;;   (minibuffer-setup-hook . highlight-parentheses-minibuffer-setup)
-;;   :config
-;;   (setq highlight-parentheses-colors
-;;         '(
-;;           "#FF3333" ; red
-;;           "#39FF14"  ; green
-;;           "#00BFFF"  ; blue
-;;           "#FFD700"  ; gold
-;;           ))
-;;   (setq highlight-parentheses-background-colors
-;;         '(
-;;           "#5C1A1A"  ; dark red bg
-;;           "#1A4D0F"  ; dark green bg
-;;           "#0F3A5C"  ; dark blue bg
-;;           "#5C4E00"  ; dark gold bg
-;;           )))
 
 ;; copy shell path - hack when not starting emacs from terminal
 (defun set-exec-path-from-shell-PATH ()
@@ -210,6 +189,27 @@
 ;;   :config
 ;;   (global-set-key (kbd "M-o") 'ace-window))
 
+;; ;; highlight surrounding parentheses
+;; (use-package highlight-parentheses
+;;   :ensure t
+;;   :hook
+;;   (prog-mode . highlight-parentheses-mode)
+;;   (minibuffer-setup-hook . highlight-parentheses-minibuffer-setup)
+;;   :config
+;;   (setq highlight-parentheses-colors
+;;         '(
+;;           "#FF3333" ; red
+;;           "#39FF14"  ; green
+;;           "#00BFFF"  ; blue
+;;           "#FFD700"  ; gold
+;;           ))
+;;   (setq highlight-parentheses-background-colors
+;;         '(
+;;           "#5C1A1A"  ; dark red bg
+;;           "#1A4D0F"  ; dark green bg
+;;           "#0F3A5C"  ; dark blue bg
+;;           "#5C4E00"  ; dark gold bg
+;;           )))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;end of General emacs stuff ;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;end of General emacs stuff ;;;;;;;;;;;;;;;;;;;;;;;;;;;
