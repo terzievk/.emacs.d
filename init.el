@@ -173,15 +173,6 @@
 ;; ix: simple emacs client to http://ix.io cmdline pastebin
 (use-package ix)
 
-;; https://www.emacswiki.org/emacs/EmacsAsDaemon#:~:text=The%20simplest%20way%20to%20stop,the%20associated%20emacs%20server%20instance.
-;; define function to shutdown emacs server instance
-(defun server-shutdown ()
-  "Save buffers, Quit, and Shutdown (kill) server."
-  (interactive)
-  (save-some-buffers)
-  (kill-emacs)
-  )
-
 ;; ranger:
 (use-package ranger
   :config
