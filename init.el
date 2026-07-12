@@ -227,187 +227,145 @@
   (treesit-auto-add-to-auto-mode-alist 'all)
   (global-treesit-auto-mode))
 
-;; ;; company: ext completion framework for Emacs
-;; (use-package company
-;;   :config
-;;   ;; the old config
-;;   (add-hook 'after-init-hook 'global-company-mode)
-;;   (setq company-idle-delay 0)
-;;   (setq company-selection-wrap-around t)
-;;   (setq company-minimum-prefix-length 1)
+;; eglot: built-in LSP client, talks to clangd
+(use-package eglot
+  :ensure nil
+  :hook ((c-ts-mode . eglot-ensure)
+         (c++-ts-mode . eglot-ensure))
+  :config
+  (add-to-list 'eglot-server-programs
+               '((c++-ts-mode c-ts-mode) . ("clangd"))))
 
-;;   ;; Use tab key to cycle through suggestions.
-;;   ;; ('tng' means 'tab and go')
-;;   (company-tng-mode)
+;; company: ext completion framework for Emacs
+(use-package company
+  :config
+  ;; the old config
+  (add-hook 'after-init-hook 'global-company-mode)
+  (setq company-idle-delay 0)
+  (setq company-selection-wrap-around t)
+  (setq company-minimum-prefix-length 1)
 
-;;   (setq-local completion-ignore-case t))
+  ;; Use tab key to cycle through suggestions.
+  ;; ('tng' means 'tab and go')
+  (company-tng-mode)
 
+  (setq-local completion-ignore-case t))
 
-;; ;; company-c-headers: Auto-completion for C/C++ headers using Company
-;; (use-package company-c-headers
-;;   :config
-;;   (add-to-list 'company-backends 'company-c-headers)
-;;   ;; list generated with: gcc -xc++ -E -v -
-;;   (add-to-list 'company-c-headers-path-system "/usr/lib/gcc/x86_64-pc-linux-gnu/14.2.1/../../../../include/c++/14.2.1")
-;;   (add-to-list 'company-c-headers-path-system "/usr/lib/gcc/x86_64-pc-linux-gnu/14.2.1/../../../../include/c++/14.2.1/x86_64-pc-linux-gnu")
-;;   (add-to-list 'company-c-headers-path-system "/usr/lib/gcc/x86_64-pc-linux-gnu/14.2.1/../../../../include/c++/14.2.1/backward")
-;;   (add-to-list 'company-c-headers-path-system "/usr/lib/gcc/x86_64-pc-linux-gnu/14.2.1/include")
-;;   (add-to-list 'company-c-headers-path-system "/usr/local/include")
-;;   (add-to-list 'company-c-headers-path-system "/usr/lib/gcc/x86_64-pc-linux-gnu/14.2.1/include-fixed")
-;;   (add-to-list 'company-c-headers-path-system "/usr/include")
-;;   )
+;; all cc-mode related stuff
+(use-package cc-mode
+  :config
+  ;; c++ public/protected/private identation
+;;; http://stackoverflow.com/questions/4490196/emacs-public-protected-private-label-indentation-of-c-header-file-not-working
+  (c-set-offset 'access-label -1)
 
-;; ;; all cc-mode related stuff
-;; (use-package cc-mode
-;;   :config
-;;   ;; c++ public/protected/private identation
-;; ;;; http://stackoverflow.com/questions/4490196/emacs-public-protected-private-label-indentation-of-c-header-file-not-working
-;;   (c-set-offset 'access-label -1)
+  ;; c++ switch indentation
+  ;; https://www.gnu.org/software/emacs/manual/html_node/efaq/Indenting-switch-statements.html
+  (c-set-offset 'case-label '+)
 
-;;   ;; c++ switch indentation
-;;   ;; https://www.gnu.org/software/emacs/manual/html_node/efaq/Indenting-switch-statements.html
-;;   (c-set-offset 'case-label '+)
+  ;; quick switch between header and implementation
+  (add-hook 'c++-ts-mode-hook (lambda() (local-set-key (kbd "C-c o") 'ff-find-other-file)))
 
-;;   ;; quick switch between header and implementation
-;;   (add-hook 'c++-ts-mode-hook (lambda() (local-set-key (kbd "C-c o") 'ff-find-other-file)))
+  ;; this solved jumping pairs problem
+  ;; https://superuser.com/questions/255510/how-to-toggle-between-cpp-and-hpp-that-are-not-in-the-same-directory
+  (setq cc-other-file-alist
+        '(("\\.c"   (".h"))
+          ("\\.cpp"   (".h"))
+          ("\\.h"   (".cpp"".c"))))
+  (setq ff-search-directories
+        '("." "../sources" "../includes" "/usr/include")) ;; little hack
+  ;; for C-c o to work with stl, bound to fail on next update
 
-;;   ;; this solved jumping pairs problem
-;;   ;; https://superuser.com/questions/255510/how-to-toggle-between-cpp-and-hpp-that-are-not-in-the-same-directory
-;;   (setq cc-other-file-alist
-;;         '(("\\.c"   (".h"))
-;;           ("\\.cpp"   (".h"))
-;;           ("\\.h"   (".cpp"".c"))))
-;;   (setq ff-search-directories
-;;         '("." "../sources" "../includes" "/usr/include")) ;; little hack
-;;   ;; for C-c o to work with stl, bound to fail on next update
+  ;; Open .h files in cpp mode.
+  ;; https://stackoverflow.com/questions/3312114/how-to-tell-emacs-to-open-h-file-in-c-mode
+  (add-to-list 'auto-mode-alist '("\\.h\\'" . c++-ts-mode)))
 
-;;   ;; Open .h files in cpp mode.
-;;   ;; https://stackoverflow.com/questions/3312114/how-to-tell-emacs-to-open-h-file-in-c-mode
-;;   (add-to-list 'auto-mode-alist '("\\.h\\'" . c++-ts-mode)))
+;; flycheck: Syntax checking for GNU Emacs
+(use-package flycheck
+  :config
+  (add-hook 'after-init-hook #'global-flycheck-mode)
+  ;; add cpplint to flycheck
+  (add-to-list 'flycheck-checkers 'cpplint)
+  (flycheck-define-checker cpplint
+    "Google C/C++ style guide static syntax checker.
 
-;; ;; (use-package semantic
-;; ;;   :config
-;; ;;   (global-semanticdb-minor-mode 1)
-;; ;;   (global-semantic-idle-scheduler-mode 1)
-;; ;;   (semantic-mode 1))
+See URL `https://github.com/cpplint/cpplint'."
+    ;; ignore header guard warnings since flycheck uses temp files
+    ;; source-original is useless - needs a save after each edit to update flycheck
+    :command ("cpplint" "--filter=-build/header_guard" source)
+    :error-patterns
+    ((error line-start (file-name) ":" line ":" (message) line-end))
+    :modes (c-ts-mode c++-ts-mode)))
 
-;; ;; irony
-;; (use-package irony
-;;   :config
-;;   (add-hook 'c++-mode-hook 'irony-mode)
-;;   (add-hook 'c-mode-hook 'irony-mode)
+;; yasnippet: A template system for Emacs
+(use-package yasnippet
+  :config
+  (yas-global-mode 1)
+  ;; Remove Yasnippet's default tab key binding
+  (define-key yas-minor-mode-map (kbd "<tab>") nil)
+  (define-key yas-minor-mode-map (kbd "TAB") nil)
+  ;; Set Yasnippet's key binding to shift+tab
+  (define-key yas-minor-mode-map (kbd "<backtab>") 'yas-expand)
+  )
 
-;;   (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options))
+(use-package yasnippet-snippets)
 
-;; (use-package company-irony
-;;   :config
-;;   (eval-after-load 'company
-;;     '(add-to-list 'company-backends 'company-irony)))
+;; "quicker" recompile
+(global-set-key [f5] 'recompile)
 
-;; (use-package google-c-style
-;;   :config
-;;   (add-hook 'c-mode-common-hook 'google-set-c-style))
+;; c++ default compile command
+(add-hook 'c++-ts-mode-hook
+          (lambda ()
+            (unless (or (file-exists-p "makefile")
+                        (file-exists-p "Makefile"))
+              (set (make-local-variable 'compile-command)
+                   ;; name execs f for ease of use
+                   (concat "g++ "
+                           buffer-file-name
+                           " -o f"
+                           " -std=c++2b"
+                           ;; some learncpp.com suggested options
+                           " -O2 -DNDEBUG"
+                           " -pedantic-errors"
+                           " -Wall -Weffc++ -Wextra -Wconversion -Wsign-conversion"
+                           " -Werror")))))
+;; c default compile command
+(add-hook 'c-mode-hook
+          (lambda ()
+            (unless (or (file-exists-p "makefile")
+                        (file-exists-p "Makefile"))
+              (set (make-local-variable 'compile-command)
+                   ;; name execs f for ease of use
+                   (concat "gcc "
+                           buffer-file-name
+                           " -o f")))))
 
-;; ;; flycheck: Syntax checking for GNU Emacs
-;; (use-package flycheck
-;;   :config
-;;   (add-hook 'after-init-hook #'global-flycheck-mode)
-;;   ;; add cpplint to flycheck
-;;   (add-to-list 'flycheck-checkers 'cpplint)
-;;   (flycheck-define-checker cpplint
-;;     "Google C/C++ style guide static syntax checker.
+;; save all buffers for me before compilation
+(setq compilation-ask-about-save nil)
 
-;; See URL `https://github.com/cpplint/cpplint'."
-;;     ;; ignore header guard warnings since flycheck uses temp files
-;;     ;; source-original is useless - needs a save after each edit to update flycheck
-;;     :command ("cpplint" "--filter=-build/header_guard" source)
-;;     :error-patterns
-;;     ((error line-start (file-name) ":" line ":" (message) line-end))
-;;     :modes (c-mode c++-mode)))
+(add-hook 'compilation-finish-functions #'my-compile)
+(defun my-compile (buf str)
+  "Open shell in the compilation window if compilation exits normally.
+See \='compilation-finish-functions to for the arguments:  BUF STR."
+  (if (null (string-match ".*exited abnormally.*" str))
+      (progn
+        ;; (kill-buffer (process-buffer (get-process "shell")))
+        (switch-to-buffer-other-frame buf)
+        (shell)
+        (message "No Compilation Errors!"))))
 
-;; ;; yasnippet: A template system for Emacs
-;; (use-package yasnippet
-;;   :config
-;;   (yas-global-mode 1)
-;;   ;; Remove Yasnippet's default tab key binding
-;;   (define-key yas-minor-mode-map (kbd "<tab>") nil)
-;;   (define-key yas-minor-mode-map (kbd "TAB") nil)
-;;   ;; Set Yasnippet's key binding to shift+tab
-;;   (define-key yas-minor-mode-map (kbd "<backtab>") 'yas-expand)
-;;   )
+;; format the file before saving
+(add-hook 'before-save-hook #'indent-buffer)
 
-
-;; (use-package yasnippet-snippets)
-
-
-;; ;; "quicker" recompile
-;; (global-set-key [f5] 'recompile)
-
-;; ;; c++ default compile command
-;; (add-hook 'c++-ts-mode-hook
-;;           (lambda ()
-;;             (unless (or (file-exists-p "makefile")
-;;                         (file-exists-p "Makefile"))
-;;               (set (make-local-variable 'compile-command)
-;;                    ;; name execs f for ease of use
-;;                    (concat "g++ "
-;;                            buffer-file-name
-;;                            " -o f"
-;;                            " -std=c++2b"
-;;                            ;; some learncpp.com suggested options
-;;                            " -O2 -DNDEBUG"
-;;                            " -pedantic-errors"
-;;                            " -Wall -Weffc++ -Wextra -Wconversion -Wsign-conversion"
-;;                            " -Werror")))))
-;; ;; c default compile command
-;; (add-hook 'c-mode-hook
-;;           (lambda ()
-;;             (unless (or (file-exists-p "makefile")
-;;                         (file-exists-p "Makefile"))
-;;               (set (make-local-variable 'compile-command)
-;;                    ;; name execs f for ease of use
-;;                    (concat "gcc "
-;;                            buffer-file-name
-;;                            " -o f")))))
-
-
-
-;; ;; save all buffers for me before compilation
-;; (setq compilation-ask-about-save nil)
-
-;; (add-hook 'compilation-finish-functions #'my-compile)
-;; (defun my-compile (buf str)
-;;   "Open shell in the compilation window if compilation exits normally.
-;; See 'compilation-finish-functions to for the arguments:  BUF STR."
-;;   (if (null (string-match ".*exited abnormally.*" str))
-;;       (progn
-;;         ;; (kill-buffer (process-buffer (get-process "shell")))
-;;         (switch-to-buffer-other-frame buf)
-;;         (shell)
-;;         (message "No Compilation Errors!"))))
-
-
-;; ;; format the file before saving
-;; (add-hook 'before-save-hook #'indent-buffer)
-
-;; ;; https://stackoverflow.com/questions/4090793/emacs-reindenting-entire-c-buffer
-;; (defun indent-buffer ()
-;;   "Indent the entire buffer using the default indenting scheme."
-;;   (interactive)
-;;   ;; when in the listed modes do your thing
-;;   (when (derived-mode-p 'c++-ts-mode 'cc-mode 'c++-mode 'emacs-lisp-mode 'web-mode 'racket-mode
-;;                         'css-mode 'js-mode)
-;;     (save-excursion
-;;       (delete-trailing-whitespace)
-;;       (indent-region (point-min) (point-max) nil)
-;;       (untabify (point-min) (point-max)))))
-
-;; ;; automatically install and use tree-sitter
-;; (use-package treesit-auto
-;;   :custom
-;;   (treesit-auto-install 'prompt)
-;;   :config
-;;   (treesit-auto-add-to-auto-mode-alist 'all)
-;;   (global-treesit-auto-mode))
+;; https://stackoverflow.com/questions/4090793/emacs-reindenting-entire-c-buffer
+(defun indent-buffer ()
+  "Indent the entire buffer using the default indenting scheme."
+  (interactive)
+  ;; when in the listed modes do your thing
+  (when (derived-mode-p 'c++-ts-mode 'cc-mode 'c++-mode 'emacs-lisp-mode 'web-mode 'racket-mode
+                        'css-mode 'js-mode)
+    (save-excursion
+      (delete-trailing-whitespace)
+      (indent-region (point-min) (point-max) nil)
+      (untabify (point-min) (point-max)))))
 
 ;;; init.el ends here
