@@ -1,7 +1,7 @@
-#My Emacs config.
+# My Emacs config.
 Requires Emacs 29+(tree-sitter, among other things).
 
-##How to run:
+## How to run:
 Git clone at $HOME. Open Emacs. It will do its thing, and voila.
 
 It might take some time - Melpa is kinda slow these days;  10-ish minutes is
