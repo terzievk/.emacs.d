@@ -1,8 +1,8 @@
 # My Emacs config.
-Requires Emacs 29+(tree-sitter, among other things).
+Requires `Emacs 29+`(tree-sitter, among other things).
 
 ## How to run:
-Git clone at $HOME. Open Emacs. It will do its thing, and voila.
+Git clone at `$HOME`. Open Emacs. It will do its thing, and voila.
 
 It might take some time - Melpa is kinda slow these days;  10-ish minutes is
 kinda normal.
@@ -10,10 +10,10 @@ kinda normal.
 Tip: Run a system update/upgrade before installing. Doesn’t hurt. Not doing so
 crashed my build once.
 
-## Q&A
+## Q&A?
 ### Why tree-sitter?
 I like navigating with hjkl and have my keyboard sped up(the equivalent of
-xset r rate 160 100). c+±mode lagged when scrolling and c+±ts-mode doesn’t.
+`xset r rate 160 100`). `c++-mode` lagged when scrolling and `c++-ts-mode` doesn’t.
 Plus Emacs is set on the tree-sitter route regardless.
 
 ### Why clangd?
@@ -23,4 +23,4 @@ Irony mode is no longer actively maintained.
 Emacs pinky…
 
 #### Does it help?
-Kinda
+Kinda.
