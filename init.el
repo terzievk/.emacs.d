@@ -234,7 +234,7 @@
          (c++-ts-mode . eglot-ensure))
   :config
   (add-to-list 'eglot-server-programs
-               '((c++-ts-mode c-ts-mode) . ("clangd"))))
+               '((c++-ts-mode c-ts-mode) . ("clangd" "--header-insertion=iwyu"))))
 
 ;; company: ext completion framework for Emacs
 (use-package company
