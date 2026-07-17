@@ -287,19 +287,7 @@
 ;; flycheck: Syntax checking for GNU Emacs
 (use-package flycheck
   :config
-  (add-hook 'after-init-hook #'global-flycheck-mode)
-  ;; add cpplint to flycheck
-  (add-to-list 'flycheck-checkers 'cpplint)
-  (flycheck-define-checker cpplint
-    "Google C/C++ style guide static syntax checker.
-
-See URL `https://github.com/cpplint/cpplint'."
-    ;; ignore header guard warnings since flycheck uses temp files
-    ;; source-original is useless - needs a save after each edit to update flycheck
-    :command ("cpplint" "--filter=-build/header_guard" source)
-    :error-patterns
-    ((error line-start (file-name) ":" line ":" (message) line-end))
-    :modes (c-ts-mode c++-ts-mode)))
+  (add-hook 'after-init-hook #'global-flycheck-mode))
 
 ;; yasnippet: A template system for Emacs
 (use-package yasnippet
