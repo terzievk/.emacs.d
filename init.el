@@ -327,7 +327,7 @@ See URL `https://github.com/cpplint/cpplint'."
                    (concat "g++ "
                            buffer-file-name
                            " -o f"
-                           " -std=c++2b"
+                           " -std=c++26"
                            ;; some learncpp.com suggested options
                            " -O2 -DNDEBUG"
                            " -pedantic-errors"
