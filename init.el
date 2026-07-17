@@ -329,10 +329,16 @@ See URL `https://github.com/cpplint/cpplint'."
                            " -o f"
                            " -std=c++26"
                            ;; some learncpp.com suggested options
-                           " -O2 -DNDEBUG"
+                           " -O2"
+                           " -DNDEBUG"
                            " -pedantic-errors"
-                           " -Wall -Weffc++ -Wextra -Wconversion -Wsign-conversion"
-                           " -Werror")))))
+                           " -Wall"
+                           " -Weffc++"
+                           " -Wextra"
+                           " -Wconversion"
+                           " -Wsign-conversion"
+                           " -Werror"
+                           )))))
 ;; c default compile command
 (add-hook 'c-mode-hook
           (lambda ()
