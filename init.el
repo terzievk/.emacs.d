@@ -287,6 +287,7 @@
 ;; flycheck: Syntax checking for GNU Emacs
 (use-package flycheck
   :config
+  (setq flycheck-global-modes '(not c-ts-mode c++-ts-mode))
   (add-hook 'after-init-hook #'global-flycheck-mode))
 
 ;; yasnippet: A template system for Emacs
