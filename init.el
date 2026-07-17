@@ -237,8 +237,8 @@
                '((c++-ts-mode c-ts-mode) . (
                                             "clangd"
                                             "--header-insertion=iwyu"
-                                            "--extra-arg=-std=c++26"
-                                            "--extra-arg=-pedantic-errors"
+                                            ;; "--extra-arg=-std=c++23"
+                                            ;; "--extra-arg=-pedantic-errors"
                                             ))))
 
 ;; company: ext completion framework for Emacs
