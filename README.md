@@ -1,6 +1,10 @@
 # My Emacs config.
 Requires `Emacs 29+`(tree-sitter, among other things).
 
+Until Emacs 31 `markdown-ts-mode needs` manual installation, see init file comments.
+
+Don't forget to have `clangd` and `gcc` installed.
+
 ## How to run:
 Git clone at `$HOME`. Open Emacs. It will do its thing, and voila.
 

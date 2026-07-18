@@ -215,6 +215,17 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;end of General emacs stuff ;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;end of General emacs stuff ;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+;; markdown treesitter mode for emacs 29 & 30
+;; it's built-in for emacs 31
+;; follow the instructions when installing (github link next line)
+;; https://github.com/LionyxML/markdown-ts-mode
+(use-package markdown-ts-mode
+  :mode ("\\.md\\'" . markdown-ts-mode)
+  :defer 't
+  :config
+  (add-to-list 'treesit-language-source-alist '(markdown "https://github.com/tree-sitter-grammars/tree-sitter-markdown" "split_parser" "tree-sitter-markdown/src"))
+  (add-to-list 'treesit-language-source-alist '(markdown-inline "https://github.com/tree-sitter-grammars/tree-sitter-markdown" "split_parser" "tree-sitter-markdown-inline/src")))
+
 ;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; C/C++ mode stuff ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; C/C++ mode stuff ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; C/C++ mode stuff ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
