@@ -242,7 +242,10 @@
 (use-package eglot
   :ensure nil
   :hook ((c-ts-mode . eglot-ensure)
-         (c++-ts-mode . eglot-ensure))
+         (c++-ts-mode . eglot-ensure)
+         ((c-ts-mode c++-ts-mode)  ;; run the clang-format through eglot/clangd
+          . (lambda ()
+              (add-hook 'before-save-hook #'eglot-format-buffer nil t))))
   :config
   (add-to-list 'eglot-server-programs
                '((c++-ts-mode c-ts-mode) . (
