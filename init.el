@@ -372,7 +372,7 @@ See \='compilation-finish-functions to for the arguments:  BUF STR."
   "Indent the entire buffer using the default indenting scheme."
   (interactive)
   ;; when in the listed modes do your thing
-  (when (derived-mode-p 'c++-ts-mode 'cc-mode 'c++-mode 'emacs-lisp-mode 'web-mode 'racket-mode
+  (when (derived-mode-p 'emacs-lisp-mode 'web-mode 'racket-mode
                         'css-mode 'js-mode)
     (save-excursion
       (delete-trailing-whitespace)
